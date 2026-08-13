@@ -145,7 +145,7 @@ export const MinimalistHero = ({
           >
             <span
               className={cn(
-                "font-script text-[clamp(3.5rem,15vw,11rem)] leading-[0.9] normal-case md:text-[clamp(3.5rem,8.5vw,9rem)]",
+                "font-script text-[clamp(3.5rem,15vw,11rem)] leading-[0.9] normal-case md:text-[clamp(4.5rem,12vw,13rem)]",
                 dark ? "text-tshabu-paper" : "text-foreground"
               )}
             >
@@ -153,7 +153,7 @@ export const MinimalistHero = ({
             </span>
             <span
               className={cn(
-                "text-[clamp(1.75rem,7vw,5rem)] font-extrabold uppercase leading-[0.9] tracking-[0.15em] md:text-[clamp(1.5rem,3.5vw,3.5rem)]",
+                "text-[clamp(1.75rem,7vw,5rem)] font-extrabold uppercase leading-[0.9] tracking-[0.15em] md:text-[clamp(2rem,5vw,5rem)]",
                 dark ? "text-tshabu-paper" : "text-foreground"
               )}
             >
