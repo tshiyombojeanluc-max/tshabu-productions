@@ -28,13 +28,10 @@ export default function HomePage() {
     <>
       <MinimalistHero
         hideHeader
-        grayscaleImage={false}
         logoText={site.shortName}
         navLinks={navLinks}
         mainText="Photography · Videography · Storytelling. Timeless photo and cinematic video for events, brands and businesses in Cape Town."
         readMoreLink="/work"
-        imageSrc="/images/hero-portrait-nobg.png"
-        imageAlt="Portrait photograph featured on the Tshabu Productions homepage"
         overlayText={{ part1: "Visual", part2: "Stories" }}
         watermarkText={["Tshabu", "Productions"]}
         socialLinks={[]}

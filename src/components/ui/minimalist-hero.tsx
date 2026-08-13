@@ -9,8 +9,8 @@ interface MinimalistHeroProps {
   navLinks: { label: string; href: string }[];
   mainText: string;
   readMoreLink: string;
-  imageSrc: string;
-  imageAlt: string;
+  imageSrc?: string;
+  imageAlt?: string;
   overlayText: {
     part1: string;
     part2: string;
@@ -166,7 +166,7 @@ export const MinimalistHero = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1 }}
-          className="z-20 order-2 md:order-1 text-center md:text-left"
+          className="z-20 order-2 text-center md:order-1 md:col-start-1 md:text-left"
         >
           <p className={cn("mx-auto max-w-xs text-sm leading-relaxed md:mx-0", dark ? "text-tshabu-paper/80" : "text-foreground/80")}>
             {mainText}
@@ -182,39 +182,41 @@ export const MinimalistHero = ({
           </a>
         </motion.div>
 
-        <div className="relative order-1 md:order-2 flex justify-center items-center h-full">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-            className={cn(
-              "absolute z-0 h-[300px] w-[300px] rounded-full md:h-[400px] md:w-[400px] lg:h-[500px] lg:w-[500px]",
-              dark ? "bg-tshabu-paper/[0.06] ring-1 ring-tshabu-paper/15" : "bg-foreground/[0.06] ring-1 ring-foreground/15"
-            )}
-          ></motion.div>
-          <div className="relative z-10 h-[336px] w-[336px] overflow-hidden rounded-full md:h-[384px] md:w-[384px] lg:h-[432px] lg:w-[432px]">
-            <motion.img
-              src={imageSrc}
-              alt={imageAlt}
-              className={cn("h-full w-full object-cover", grayscaleImage && "grayscale contrast-125")}
-              style={{ scale: imageZoom, transformOrigin: imageFocalPoint }}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.onerror = null;
-                target.src = `https://placehold.co/400x600/111111/f7f7f5?text=Image+Not+Found`;
-              }}
-            />
+        {imageSrc && (
+          <div className="relative order-1 md:order-2 flex justify-center items-center h-full">
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+              className={cn(
+                "absolute z-0 h-[300px] w-[300px] rounded-full md:h-[400px] md:w-[400px] lg:h-[500px] lg:w-[500px]",
+                dark ? "bg-tshabu-paper/[0.06] ring-1 ring-tshabu-paper/15" : "bg-foreground/[0.06] ring-1 ring-foreground/15"
+              )}
+            ></motion.div>
+            <div className="relative z-10 h-[336px] w-[336px] overflow-hidden rounded-full md:h-[384px] md:w-[384px] lg:h-[432px] lg:w-[432px]">
+              <motion.img
+                src={imageSrc}
+                alt={imageAlt}
+                className={cn("h-full w-full object-cover", grayscaleImage && "grayscale contrast-125")}
+                style={{ scale: imageZoom, transformOrigin: imageFocalPoint }}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null;
+                  target.src = `https://placehold.co/400x600/111111/f7f7f5?text=Image+Not+Found`;
+                }}
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.2 }}
-          className="z-20 order-3 flex items-center justify-center text-center md:justify-start"
+          className="z-20 order-3 flex items-center justify-center text-center md:col-start-3 md:justify-start"
         >
           <h1
             className={cn(
