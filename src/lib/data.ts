@@ -15,9 +15,9 @@ export const navLinks = [
 ];
 
 export const socialLinks = [
-  { label: "Facebook", href: "https://facebook.com" },
-  { label: "Instagram", href: "https://instagram.com" },
-  { label: "TikTok", href: "https://tiktok.com" },
+  { label: "Facebook", href: "https://www.facebook.com/share/1HvfUTFsg3/" },
+  { label: "Instagram", href: "https://www.instagram.com/tshabuproductions" },
+  { label: "TikTok", href: "https://www.tiktok.com/@tshabu.production" },
 ];
 
 export type Project = {
