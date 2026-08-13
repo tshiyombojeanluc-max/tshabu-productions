@@ -1,0 +1,109 @@
+import Link from "next/link";
+import type { Metadata } from "next";
+import { MinimalistHero } from "@/components/ui/minimalist-hero";
+import { Reveal } from "@/components/site/reveal";
+import { SectionHeading } from "@/components/site/section-heading";
+import { ProjectGrid } from "@/components/site/project-grid";
+import ScrollAdventure, { type ScrollAdventurePage } from "@/components/ui/animated-scroll";
+import { featuredProjects, navLinks, services, site } from "@/lib/data";
+
+export const metadata: Metadata = {
+  title: "Tshabu Productions — Photography & Videography in Cape Town",
+  description:
+    "Tshabu Productions creates timeless photography and cinematic videography for events, brands and businesses in Cape Town. We don't just take photos or film videos — we tell your story.",
+};
+
+const showreelPages: ScrollAdventurePage[] = featuredProjects.slice(0, 4).map((project, i) => {
+  const content = {
+    heading: `${project.category} — ${project.year}`,
+    description: project.name,
+  };
+  return i % 2 === 0
+    ? { leftBgImage: null, rightBgImage: project.coverImage, leftContent: content, rightContent: null }
+    : { leftBgImage: project.coverImage, rightBgImage: null, leftContent: null, rightContent: content };
+});
+
+export default function HomePage() {
+  return (
+    <>
+      <MinimalistHero
+        hideHeader
+        grayscaleImage={false}
+        logoText={site.shortName}
+        navLinks={navLinks}
+        mainText="Photography · Videography · Storytelling. Timeless photo and cinematic video for events, brands and businesses in Cape Town."
+        readMoreLink="/work"
+        imageSrc="/images/hero-portrait-nobg.png"
+        imageAlt="Portrait photograph featured on the Tshabu Productions homepage"
+        overlayText={{ part1: "Visual", part2: "Stories" }}
+        watermarkText={["Tshabu", "Productions"]}
+        socialLinks={[]}
+        locationText={site.location}
+        className="pt-20"
+      />
+
+      <section className="container-edit py-28 md:py-40">
+        <Reveal>
+          <p className="max-w-4xl text-4xl font-medium leading-[1.15] tracking-tight sm:text-5xl md:text-6xl">
+            We don&rsquo;t just take photos or film videos. We tell your story.
+          </p>
+        </Reveal>
+        <Reveal delay={0.15} className="mt-10 max-w-xl">
+          <p className="text-base leading-relaxed text-tshabu-graphite">
+            Tshabu Productions is a Cape Town photography and videography studio. We help
+            businesses, schools and individuals be remembered through powerful photo and video
+            storytelling — for events, brands and everything in between.
+          </p>
+        </Reveal>
+      </section>
+
+      <section id="selected-work">
+        <div className="container-edit mb-16">
+          <SectionHeading label="Selected Work" title="Recent Productions" />
+        </div>
+        <ScrollAdventure pages={showreelPages} />
+      </section>
+
+      <section className="container-edit py-28 md:py-40">
+        <div className="mb-16 flex items-end justify-between gap-6">
+          <SectionHeading label="Portfolio" title="Full Portfolio" />
+          <Reveal>
+            <Link href="/work" className="label-caps hidden shrink-0 whitespace-nowrap underline underline-offset-4 sm:block">
+              View all work →
+            </Link>
+          </Reveal>
+        </div>
+        <ProjectGrid projects={featuredProjects.slice(0, 4)} />
+        <Reveal className="mt-12 sm:hidden">
+          <Link href="/work" className="label-caps underline underline-offset-4">
+            View all work →
+          </Link>
+        </Reveal>
+      </section>
+
+      <section className="bg-tshabu-black py-28 text-tshabu-paper md:py-40">
+        <div className="container-edit">
+          <SectionHeading dark label="What We Do" title="Services" className="mb-16" />
+          <ul>
+            {services.map((service, i) => (
+              <Reveal key={service.id} delay={i * 0.05}>
+                <li className="flex flex-col gap-2 border-t border-tshabu-paper/15 py-8 last:border-b sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-baseline gap-6">
+                    <span className="label-caps text-tshabu-paper/40">{service.index}</span>
+                    <h3 className="text-2xl font-medium sm:text-3xl">{service.title}</h3>
+                  </div>
+                  <p className="text-tshabu-paper/60 sm:max-w-sm sm:text-right">{service.summary}</p>
+                </li>
+              </Reveal>
+            ))}
+          </ul>
+          <Reveal delay={0.2} className="mt-12">
+            <Link href="/services" className="label-caps underline underline-offset-4">
+              More about our services →
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+    </>
+  );
+}
