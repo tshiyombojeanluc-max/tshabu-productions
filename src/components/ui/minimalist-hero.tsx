@@ -29,6 +29,9 @@ interface MinimalistHeroProps {
   imageZoom?: number;
   /** CSS transform-origin (e.g. "60% 40%") controlling which part of the photo the zoom anchors to. */
   imageFocalPoint?: string;
+  /** Optional solid CTA button rendered below the "Read More" link. */
+  ctaText?: string;
+  ctaLink?: string;
 }
 
 const NavLink = ({
@@ -93,6 +96,8 @@ export const MinimalistHero = ({
   grayscaleImage = true,
   imageZoom = 1,
   imageFocalPoint = "50% 50%",
+  ctaText,
+  ctaLink,
 }: MinimalistHeroProps) => {
   return (
     <div
@@ -183,6 +188,19 @@ export const MinimalistHero = ({
           >
             Read More
           </a>
+          {ctaText && ctaLink && (
+            <a
+              href={ctaLink}
+              className={cn(
+                "mx-auto mt-6 block w-fit px-8 py-4 text-sm uppercase tracking-[0.2em] transition-colors md:mx-0",
+                dark
+                  ? "bg-tshabu-paper text-tshabu-black hover:bg-tshabu-paper/90"
+                  : "bg-tshabu-black text-tshabu-paper hover:bg-tshabu-charcoal"
+              )}
+            >
+              {ctaText}
+            </a>
+          )}
         </motion.div>
 
         {imageSrc && (
