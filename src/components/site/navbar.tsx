@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
@@ -15,12 +16,11 @@ export default function Navbar() {
     <>
       <header className="fixed inset-x-0 top-0 z-50 mix-blend-difference">
         <nav className="container-edit flex items-center justify-between py-6 text-tshabu-white">
-          <Link
-            href="/"
-            onClick={() => setOpen(false)}
-            className="text-sm font-bold uppercase tracking-[0.2em]"
-          >
-            {site.name}
+          <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-3">
+            <span aria-hidden="true" className="h-9 w-9 sm:h-10 sm:w-10" />
+            <span className="hidden text-sm font-bold uppercase tracking-[0.2em] sm:inline">
+              {site.name}
+            </span>
           </Link>
 
           <div className="hidden items-center gap-10 md:flex">
@@ -51,6 +51,23 @@ export default function Navbar() {
           </button>
         </nav>
       </header>
+
+      {/* Logo painted on its own unblended layer — mix-blend-difference above
+          would otherwise flatten its black/white artwork against the page. */}
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-[51]">
+        <div className="container-edit flex items-center py-6">
+          <Link href="/" onClick={() => setOpen(false)} className="pointer-events-auto">
+            <Image
+              src="/images/logo.png"
+              alt={site.name}
+              width={40}
+              height={40}
+              priority
+              className="h-9 w-9 rounded-full sm:h-10 sm:w-10"
+            />
+          </Link>
+        </div>
+      </div>
 
       <div
         className={cn(
