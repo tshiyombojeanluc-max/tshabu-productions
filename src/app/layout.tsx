@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Kaushan_Script } from "next/font/google";
 import Navbar from "@/components/site/navbar";
 import Footer from "@/components/site/footer";
 import "./globals.css";
@@ -8,6 +8,13 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
+});
+
+// Matches the brush-script "Tshabu" wordmark in the logo.
+const kaushanScript = Kaushan_Script({
+  variable: "--font-script",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 const siteUrl = "https://www.tshabuproductions.com";
@@ -52,7 +59,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} antialiased`}>
+    <html lang="en" className={`${inter.variable} ${kaushanScript.variable} antialiased`}>
       <body className="min-h-screen bg-background text-foreground selection:bg-tshabu-black selection:text-tshabu-paper">
         <Navbar />
         <main>{children}</main>

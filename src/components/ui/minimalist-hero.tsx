@@ -145,15 +145,15 @@ export const MinimalistHero = ({
           >
             <span
               className={cn(
-                "text-[clamp(3rem,13vw,10rem)] font-extrabold uppercase leading-[0.9] tracking-tight",
-                dark ? "text-tshabu-paper/[0.16]" : "text-foreground/[0.2]"
+                "font-script text-[clamp(3.5rem,15vw,11rem)] leading-[0.9] normal-case",
+                dark ? "text-tshabu-paper/[0.18]" : "text-foreground/[0.22]"
               )}
             >
               {watermarkText[0]}
             </span>
             <span
               className={cn(
-                "text-[clamp(3rem,13vw,10rem)] font-extrabold uppercase leading-[0.9] tracking-tight",
+                "text-[clamp(1.75rem,7vw,5rem)] font-extrabold uppercase leading-[0.9] tracking-[0.15em]",
                 dark ? "text-tshabu-paper/[0.16]" : "text-foreground/[0.2]"
               )}
             >
