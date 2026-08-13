@@ -51,6 +51,14 @@ export default function HomePage() {
             storytelling — for events, brands and everything in between.
           </p>
         </Reveal>
+        <Reveal delay={0.25} className="mt-10">
+          <Link
+            href="/contact"
+            className="inline-block bg-tshabu-black px-8 py-4 text-sm uppercase tracking-[0.2em] text-tshabu-paper transition-colors hover:bg-tshabu-charcoal"
+          >
+            Book Your Session →
+          </Link>
+        </Reveal>
       </section>
 
       <section id="selected-work">
