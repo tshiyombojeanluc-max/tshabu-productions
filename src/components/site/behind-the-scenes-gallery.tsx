@@ -4,12 +4,12 @@ import Image from "next/image";
 import MasonryGrid from "@/components/ui/masonry-grid";
 
 const behindTheScenes = [
-  { src: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=900&auto=format&fit=crop&q=80", tall: true },
-  { src: "https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=900&auto=format&fit=crop&q=80", tall: false },
-  { src: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=900&auto=format&fit=crop&q=80", tall: false },
-  { src: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=900&auto=format&fit=crop&q=80", tall: true },
-  { src: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=900&auto=format&fit=crop&q=80", tall: false },
-  { src: "https://images.unsplash.com/photo-1493514789931-586cb221d7a7?w=900&auto=format&fit=crop&q=80", tall: true },
+  { src: "/images/stock/glasshouse-1.jpg", tall: true },
+  { src: "/images/stock/low-tide-1.jpg", tall: false },
+  { src: "/images/stock/glasshouse-3.jpg", tall: false },
+  { src: "/images/stock/north-star-3.jpg", tall: true },
+  { src: "/images/stock/afterglow-2.jpg", tall: false },
+  { src: "/images/stock/glasshouse-2.jpg", tall: true },
 ];
 
 export function BehindTheScenesGallery() {

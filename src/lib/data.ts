@@ -43,13 +43,12 @@ export const projects: Project[] = [
     client: "Arden Watch Co.",
     description:
       "A quiet product photography story built around light, texture and the confidence of a brand that doesn't need to shout.",
-    coverImage:
-      "https://images.unsplash.com/photo-1495707902641-75cac588d2e9?w=1400&auto=format&fit=crop&q=80",
+    coverImage: "/images/stock/north-star-1.jpg",
     coverAspect: "landscape",
     gallery: [
-      "https://images.unsplash.com/photo-1495707902641-75cac588d2e9?w=1600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=1600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=1600&auto=format&fit=crop&q=80",
+      "/images/stock/north-star-1.jpg",
+      "/images/stock/north-star-2.jpg",
+      "/images/stock/north-star-3.jpg",
     ],
     credits: [
       { role: "Director", name: "Lerato Tshabu" },
@@ -67,13 +66,12 @@ export const projects: Project[] = [
     client: "Independent",
     description:
       "A short film exploring memory and architecture, shot over three days inside a single modernist residence at the edge of the city.",
-    coverImage:
-      "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1400&auto=format&fit=crop&q=80",
+    coverImage: "/images/stock/glasshouse-1.jpg",
     coverAspect: "portrait",
     gallery: [
-      "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1493514789931-586cb221d7a7?w=1600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=1600&auto=format&fit=crop&q=80",
+      "/images/stock/glasshouse-1.jpg",
+      "/images/stock/glasshouse-2.jpg",
+      "/images/stock/glasshouse-3.jpg",
     ],
     credits: [
       { role: "Director", name: "Lerato Tshabu" },
@@ -90,13 +88,12 @@ export const projects: Project[] = [
     client: "Ffélicité Maison",
     description:
       "A multi-format campaign for a Paris-based fashion house — film, stills and social content unified under one visual language.",
-    coverImage:
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1400&auto=format&fit=crop&q=80",
+    coverImage: "/images/stock/monogram-1.jpg",
     coverAspect: "landscape",
     gallery: [
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1520975954732-35dd22299614?w=1600&auto=format&fit=crop&q=80",
+      "/images/stock/monogram-1.jpg",
+      "/images/stock/monogram-2.jpg",
+      "/images/stock/monogram-3.jpg",
     ],
     credits: [
       { role: "Creative Director", name: "Lerato Tshabu" },
@@ -113,13 +110,12 @@ export const projects: Project[] = [
     client: "Private Wedding",
     description:
       "An intimate wedding film shot at dawn on the Atlantic coast, built entirely around natural light and quiet, unscripted moments.",
-    coverImage:
-      "https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=1400&auto=format&fit=crop&q=80",
+    coverImage: "/images/stock/low-tide-1.jpg",
     coverAspect: "portrait",
     gallery: [
-      "https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=1600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1465101162946-4377e57745c3?w=1600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1500835556837-99ac94a94552?w=1600&auto=format&fit=crop&q=80",
+      "/images/stock/low-tide-1.jpg",
+      "/images/stock/low-tide-2.jpg",
+      "/images/stock/low-tide-3.jpg",
     ],
     credits: [
       { role: "Director", name: "Naledi Moyo" },
@@ -136,13 +132,9 @@ export const projects: Project[] = [
     client: "Field & Fire",
     description:
       "A short documentary following a family-run restaurant through one service, told without narration — only sound, light and rhythm.",
-    coverImage:
-      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&auto=format&fit=crop&q=80",
+    coverImage: "/images/stock/long-table-1.jpg",
     coverAspect: "landscape",
-    gallery: [
-      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&auto=format&fit=crop&q=80",
-    ],
+    gallery: ["/images/stock/long-table-1.jpg"],
     credits: [
       { role: "Director", name: "Lerato Tshabu" },
       { role: "Producer", name: "Kwame Asante" },
@@ -157,13 +149,9 @@ export const projects: Project[] = [
     client: "Solenne Beauty",
     description:
       "A skincare campaign built on texture and light — macro photography and product stills for a brand that trusts its ingredients to speak first.",
-    coverImage:
-      "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=1400&auto=format&fit=crop&q=80",
+    coverImage: "/images/stock/afterglow-1.jpg",
     coverAspect: "square",
-    gallery: [
-      "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=1600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=1600&auto=format&fit=crop&q=80",
-    ],
+    gallery: ["/images/stock/afterglow-1.jpg", "/images/stock/afterglow-2.jpg"],
     credits: [
       { role: "Director", name: "Naledi Moyo" },
       { role: "Photographer", name: "Anaïs Laurent" },

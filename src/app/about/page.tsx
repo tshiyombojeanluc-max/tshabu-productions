@@ -21,7 +21,7 @@ export default function AboutPage() {
         navLinks={navLinks}
         mainText="Tshabu Productions is a Cape Town photography and videography studio. We partner with businesses, schools and individuals to build visual stories shaped by discipline, patience and a clear point of view."
         readMoreLink="/work"
-        imageSrc="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=900&auto=format&fit=crop&q=80"
+        imageSrc="/images/stock/about-portrait.jpg"
         imageAlt="Portrait of a Tshabu Productions photographer on set"
         overlayText={{ part1: "We capture.", part2: "We create." }}
         socialLinks={[
