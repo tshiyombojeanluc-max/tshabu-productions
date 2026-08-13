@@ -145,7 +145,7 @@ export const MinimalistHero = ({
           >
             <span
               className={cn(
-                "font-script text-[clamp(3.5rem,15vw,11rem)] leading-[0.9] normal-case md:text-[clamp(2.5rem,5.5vw,6rem)]",
+                "font-script text-[clamp(3.5rem,15vw,11rem)] leading-[0.9] normal-case md:text-[clamp(3.5rem,8.5vw,9rem)]",
                 dark ? "text-tshabu-paper" : "text-foreground"
               )}
             >
@@ -153,7 +153,7 @@ export const MinimalistHero = ({
             </span>
             <span
               className={cn(
-                "text-[clamp(1.75rem,7vw,5rem)] font-extrabold uppercase leading-[0.9] tracking-[0.15em] md:text-[clamp(1.1rem,2.4vw,2.5rem)]",
+                "text-[clamp(1.75rem,7vw,5rem)] font-extrabold uppercase leading-[0.9] tracking-[0.15em] md:text-[clamp(1.5rem,3.5vw,3.5rem)]",
                 dark ? "text-tshabu-paper" : "text-foreground"
               )}
             >
@@ -216,7 +216,7 @@ export const MinimalistHero = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.2 }}
-          className="z-20 order-3 flex items-center justify-center text-center md:col-start-3 md:justify-start"
+          className="z-20 order-3 flex items-center justify-center text-center md:col-start-3 md:justify-start md:self-end md:pb-8"
         >
           <h1
             className={cn(
