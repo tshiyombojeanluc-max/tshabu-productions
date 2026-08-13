@@ -11,7 +11,7 @@ interface MinimalistHeroProps {
   readMoreLink: string;
   imageSrc?: string;
   imageAlt?: string;
-  overlayText: {
+  overlayText?: {
     part1: string;
     part2: string;
   };
@@ -166,7 +166,10 @@ export const MinimalistHero = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1 }}
-          className="z-20 order-2 text-center md:order-1 md:col-start-1 md:text-left"
+          className={cn(
+            "z-20 order-2 text-center md:order-1 md:col-start-1 md:text-left",
+            watermarkText && "self-end pb-8 md:self-auto md:pb-0"
+          )}
         >
           <p className={cn("mx-auto max-w-xs text-sm leading-relaxed md:mx-0", dark ? "text-tshabu-paper/80" : "text-foreground/80")}>
             {mainText}
@@ -212,23 +215,28 @@ export const MinimalistHero = ({
           </div>
         )}
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
-          className="z-20 order-3 flex items-center justify-center text-center md:col-start-3 md:justify-start md:self-end md:pb-8"
-        >
-          <h1
+        {overlayText && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.2 }}
             className={cn(
-              "text-[clamp(2rem,10vw,3.5rem)] font-extrabold uppercase leading-[0.95] md:text-[clamp(1.5rem,3.7vw,3.25rem)]",
-              dark ? "text-tshabu-paper" : "text-foreground"
+              "z-20 order-3 flex items-center justify-center text-center md:col-start-3 md:justify-start",
+              watermarkText && "md:self-end md:pb-8"
             )}
           >
-            {overlayText.part1}
-            <br />
-            {overlayText.part2}
-          </h1>
-        </motion.div>
+            <h1
+              className={cn(
+                "text-[clamp(2rem,10vw,3.5rem)] font-extrabold uppercase leading-[0.95] md:text-[clamp(1.5rem,3.7vw,3.25rem)]",
+                dark ? "text-tshabu-paper" : "text-foreground"
+              )}
+            >
+              {overlayText.part1}
+              <br />
+              {overlayText.part2}
+            </h1>
+          </motion.div>
+        )}
       </div>
 
       <footer className={cn("z-30 flex w-full max-w-7xl items-center justify-between", hideFooter && "sr-only")}>

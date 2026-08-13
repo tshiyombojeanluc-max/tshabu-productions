@@ -32,7 +32,6 @@ export default function HomePage() {
         navLinks={navLinks}
         mainText="Photography · Videography · Storytelling. Timeless photo and cinematic video for events, brands and businesses in Cape Town."
         readMoreLink="/work"
-        overlayText={{ part1: "Visual", part2: "Stories" }}
         watermarkText={["Tshabu", "Productions"]}
         socialLinks={[]}
         locationText={site.location}
