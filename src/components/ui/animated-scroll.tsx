@@ -28,6 +28,7 @@ export default function ScrollAdventure({ pages, className }: ScrollAdventurePro
   const scrolling = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
+  const touchStartY = useRef<number | null>(null);
 
   useEffect(() => {
     const node = containerRef.current;
@@ -82,10 +83,56 @@ export default function ScrollAdventure({ pages, className }: ScrollAdventurePro
       }
     };
 
+    // Touch devices never fire `wheel` events, so swiping needs its own
+    // handling — mirrors the wheel logic above, including releasing back to
+    // native scroll at the first/last slide.
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY.current = e.touches[0]?.clientY ?? null;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isInView || touchStartY.current === null) return;
+      const currentY = e.touches[0]?.clientY;
+      if (currentY === undefined) return;
+      const deltaY = touchStartY.current - currentY;
+      const goingDown = deltaY > 0;
+      const atEnd = goingDown && currentPage === numOfPages;
+      const atStart = !goingDown && currentPage === 1;
+      if (atEnd || atStart) return;
+      e.preventDefault();
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!isInView || touchStartY.current === null) return;
+      const endY = e.changedTouches[0]?.clientY;
+      const startY = touchStartY.current;
+      touchStartY.current = null;
+      if (endY === undefined || scrolling.current) return;
+      const deltaY = startY - endY;
+      if (Math.abs(deltaY) < 40) return;
+      const goingDown = deltaY > 0;
+      const atEnd = goingDown && currentPage === numOfPages;
+      const atStart = !goingDown && currentPage === 1;
+      if (atEnd || atStart) return;
+      scrolling.current = true;
+      if (goingDown) {
+        navigateDown();
+      } else {
+        navigateUp();
+      }
+      setTimeout(() => (scrolling.current = false), animTime);
+    };
+
     node.addEventListener("wheel", handleWheel, { passive: false });
+    node.addEventListener("touchstart", handleTouchStart, { passive: true });
+    node.addEventListener("touchmove", handleTouchMove, { passive: false });
+    node.addEventListener("touchend", handleTouchEnd);
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       node.removeEventListener("wheel", handleWheel);
+      node.removeEventListener("touchstart", handleTouchStart);
+      node.removeEventListener("touchmove", handleTouchMove);
+      node.removeEventListener("touchend", handleTouchEnd);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [currentPage, isInView, numOfPages]);
