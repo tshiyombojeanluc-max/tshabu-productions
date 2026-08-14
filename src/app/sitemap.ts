@@ -1,19 +1,21 @@
 import type { MetadataRoute } from "next";
 import { projects } from "@/lib/data";
-
-const siteUrl = "https://www.tshabuproductions.com";
+import { SITE_URL } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const now = new Date();
+
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: siteUrl, changeFrequency: "monthly", priority: 1 },
-    { url: `${siteUrl}/work`, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${siteUrl}/about`, changeFrequency: "yearly", priority: 0.6 },
-    { url: `${siteUrl}/services`, changeFrequency: "yearly", priority: 0.6 },
-    { url: `${siteUrl}/contact`, changeFrequency: "yearly", priority: 0.5 },
+    { url: SITE_URL, lastModified: now, changeFrequency: "monthly", priority: 1 },
+    { url: `${SITE_URL}/work`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${SITE_URL}/about`, lastModified: now, changeFrequency: "yearly", priority: 0.6 },
+    { url: `${SITE_URL}/services`, lastModified: now, changeFrequency: "yearly", priority: 0.6 },
+    { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: "yearly", priority: 0.5 },
   ];
 
   const projectRoutes: MetadataRoute.Sitemap = projects.map((project) => ({
-    url: `${siteUrl}/work/${project.slug}`,
+    url: `${SITE_URL}/work/${project.slug}`,
+    lastModified: now,
     changeFrequency: "monthly",
     priority: 0.7,
   }));

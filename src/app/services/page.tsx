@@ -1,28 +1,54 @@
-import type { Metadata } from "next";
 import { Reveal } from "@/components/site/reveal";
+import { JsonLd } from "@/components/site/json-ld";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { services } from "@/lib/data";
+import { services, site } from "@/lib/data";
+import { buildMetadata, breadcrumbJsonLd, absoluteUrl } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "Services",
   description:
     "Photography, videography, event coverage and post-production — the services offered by Tshabu Productions in Cape Town.",
-};
+  path: "/services",
+});
+
+const servicesJsonLd = services.map((service) => ({
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: service.title,
+  name: `${service.title} — Tshabu Productions`,
+  description: service.description,
+  provider: { "@id": `${absoluteUrl("/")}#organization` },
+  areaServed: { "@type": "City", name: "Cape Town" },
+}));
 
 export default function ServicesPage() {
   return (
     <>
+      {servicesJsonLd.map((data, i) => (
+        <JsonLd key={services[i].id} data={data} />
+      ))}
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Services", path: "/services" },
+        ])}
+      />
       <section className="container-edit pt-40 pb-20 md:pt-48 md:pb-28">
         <Reveal className="max-w-3xl">
           <p className="label-caps mb-4">What We Do</p>
           <h1 className="text-5xl font-semibold uppercase leading-[1.02] tracking-tight sm:text-6xl md:text-7xl">
             Services
           </h1>
+          <p className="mt-6 max-w-xl text-tshabu-graphite">
+            {site.name} provides photography, videography, event coverage and
+            post-production for businesses, schools and individuals across{" "}
+            {site.location}.
+          </p>
         </Reveal>
       </section>
 

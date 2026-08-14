@@ -1,11 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export interface ScrollAdventurePage {
   leftBgImage: string | null;
+  leftImageAlt?: string;
   rightBgImage: string | null;
+  rightImageAlt?: string;
   leftContent: { heading: string; description: React.ReactNode } | null;
   rightContent: { heading: string; description: React.ReactNode } | null;
 }
@@ -156,10 +159,17 @@ export default function ScrollAdventure({ pages, className }: ScrollAdventurePro
               className="absolute top-0 left-0 h-full w-1/2 transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
               style={{ transform: leftTrans }}
             >
-              <div
-                className="h-full w-full bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: page.leftBgImage ? `url(${page.leftBgImage})` : undefined }}
-              >
+              <div className="relative h-full w-full">
+                {page.leftBgImage && (
+                  <Image
+                    src={page.leftBgImage}
+                    alt={page.leftImageAlt ?? ""}
+                    fill
+                    priority={i === 0}
+                    sizes="50vw"
+                    className="object-cover"
+                  />
+                )}
                 <div className="absolute inset-0 bg-black/35" />
                 <div className="relative flex h-full flex-col items-center justify-center p-8 text-center text-tshabu-paper">
                   {page.leftContent && (
@@ -176,10 +186,17 @@ export default function ScrollAdventure({ pages, className }: ScrollAdventurePro
               className="absolute top-0 left-1/2 h-full w-1/2 transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
               style={{ transform: rightTrans }}
             >
-              <div
-                className="h-full w-full bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: page.rightBgImage ? `url(${page.rightBgImage})` : undefined }}
-              >
+              <div className="relative h-full w-full">
+                {page.rightBgImage && (
+                  <Image
+                    src={page.rightBgImage}
+                    alt={page.rightImageAlt ?? ""}
+                    fill
+                    priority={i === 0}
+                    sizes="50vw"
+                    className="object-cover"
+                  />
+                )}
                 <div className="absolute inset-0 bg-black/35" />
                 <div className="relative flex h-full flex-col items-center justify-center p-8 text-center text-tshabu-paper">
                   {page.rightContent && (

@@ -3,8 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Reveal, ImageReveal } from "@/components/site/reveal";
+import { JsonLd } from "@/components/site/json-ld";
 import { getAdjacentProjects, getProjectBySlug, projects } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { buildMetadata, breadcrumbJsonLd, absoluteUrl } from "@/lib/seo";
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -18,15 +20,12 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = getProjectBySlug(slug);
   if (!project) return {};
-  return {
+  return buildMetadata({
     title: project.name,
     description: project.description,
-    openGraph: {
-      title: `${project.name} — Tshabu Productions`,
-      description: project.description,
-      images: [{ url: project.coverImage }],
-    },
-  };
+    path: `/work/${project.slug}`,
+    image: project.coverImage,
+  });
 }
 
 export default async function ProjectPage({
@@ -40,8 +39,32 @@ export default async function ProjectPage({
 
   const { prev, next } = getAdjacentProjects(slug);
 
+  const creativeWorkJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: project.name,
+    description: project.description,
+    url: absoluteUrl(`/work/${project.slug}`),
+    image: project.gallery.map((photo) => absoluteUrl(photo.src)),
+    datePublished: project.year,
+    creator: { "@id": `${absoluteUrl("/")}#organization` },
+    about: project.category,
+    locationCreated: {
+      "@type": "Place",
+      name: "Cape Town, South Africa",
+    },
+  };
+
   return (
     <article>
+      <JsonLd data={creativeWorkJsonLd} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Work", path: "/work" },
+          { name: project.name, path: `/work/${project.slug}` },
+        ])}
+      />
       <section className="relative flex h-[100svh] w-full items-end overflow-hidden bg-tshabu-black">
         <Image
           src={project.coverImage}

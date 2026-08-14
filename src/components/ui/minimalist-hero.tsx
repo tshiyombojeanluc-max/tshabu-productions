@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -218,22 +219,21 @@ export const MinimalistHero = ({
                 dark ? "bg-tshabu-paper/[0.06] ring-1 ring-tshabu-paper/15" : "bg-foreground/[0.06] ring-1 ring-foreground/15"
               )}
             ></motion.div>
-            <div className="relative z-10 h-[336px] w-[336px] overflow-hidden rounded-full md:h-[384px] md:w-[384px] lg:h-[432px] lg:w-[432px]">
-              <motion.img
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+              className="relative z-10 h-[336px] w-[336px] overflow-hidden rounded-full md:h-[384px] md:w-[384px] lg:h-[432px] lg:w-[432px]"
+            >
+              <Image
                 src={imageSrc}
-                alt={imageAlt}
-                className={cn("h-full w-full object-cover", grayscaleImage && "grayscale contrast-125")}
+                alt={imageAlt ?? ""}
+                fill
+                sizes="(max-width: 768px) 336px, (max-width: 1024px) 384px, 432px"
+                className={cn("object-cover", grayscaleImage && "grayscale contrast-125")}
                 style={{ scale: imageZoom, transformOrigin: imageFocalPoint }}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.onerror = null;
-                  target.src = `https://placehold.co/400x600/111111/f7f7f5?text=Image+Not+Found`;
-                }}
               />
-            </div>
+            </motion.div>
           </div>
         )}
 

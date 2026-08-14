@@ -1,17 +1,25 @@
-import type { Metadata } from "next";
 import { Reveal } from "@/components/site/reveal";
 import { ContactForm } from "@/components/site/contact-form";
+import { JsonLd } from "@/components/site/json-ld";
 import { site, socialLinks } from "@/lib/data";
+import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "Contact",
   description:
     "Get in touch with Tshabu Productions to book photography, videography or event coverage in Cape Town.",
-};
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (
     <section className="container-edit grid grid-cols-1 gap-16 pt-40 pb-28 md:grid-cols-12 md:pt-48 md:pb-40">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Contact", path: "/contact" },
+        ])}
+      />
       <div className="md:col-span-5">
         <Reveal>
           <p className="label-caps mb-6">Get in Touch</p>

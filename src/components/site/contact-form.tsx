@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { site } from "@/lib/data";
 
 const projectTypes = ["Photography", "Videography", "Event Coverage", "Brand Content", "Other"];
 const budgets = ["Under R2,500", "R2,500 – R5,000", "R5,000 – R10,000", "R10,000+", "Not sure — advise me"];
@@ -21,18 +22,52 @@ export function ContactForm() {
   const [projectType, setProjectType] = useState<string | null>(null);
   const [budget, setBudget] = useState<string | null>(null);
 
+  // No backend is wired up yet, so submissions are handed off to the
+  // visitor's own email client rather than silently discarded. Swap this
+  // for a real API route (e.g. Resend) once mail-sending credentials exist.
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("submitting");
-    window.setTimeout(() => setStatus("success"), 900);
+
+    const formData = new FormData(e.currentTarget);
+    const firstName = formData.get("firstName");
+    const lastName = formData.get("lastName");
+    const email = formData.get("email");
+    const company = formData.get("company");
+    const message = formData.get("message");
+
+    const subject = `New enquiry from ${firstName} ${lastName}`;
+    const body = [
+      `Name: ${firstName} ${lastName}`,
+      `Email: ${email}`,
+      company ? `Company: ${company}` : null,
+      projectType ? `Project type: ${projectType}` : null,
+      budget ? `Budget: ${budget}` : null,
+      "",
+      "Message:",
+      message,
+    ]
+      .filter((line) => line !== null)
+      .join("\n");
+
+    const mailtoUrl = `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
+    window.setTimeout(() => setStatus("success"), 500);
   };
 
   if (status === "success") {
     return (
       <div className="border border-tshabu-graphite/30 px-8 py-16 text-center">
-        <p className="label-caps mb-4 text-tshabu-graphite">Message sent</p>
+        <p className="label-caps mb-4 text-tshabu-graphite">Almost done</p>
         <p className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          Thank you. We&rsquo;ll be in touch shortly.
+          Your email app should be open with your message ready — hit send there to reach us.
+        </p>
+        <p className="mt-6 text-sm text-tshabu-graphite">
+          Nothing opened? Email us directly at{" "}
+          <a href={`mailto:${site.email}`} className="underline">
+            {site.email}
+          </a>
+          .
         </p>
       </div>
     );

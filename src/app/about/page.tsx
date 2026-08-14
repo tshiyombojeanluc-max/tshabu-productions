@@ -1,20 +1,28 @@
-import type { Metadata } from "next";
 import { Globe, ImageIcon, Video } from "lucide-react";
 import { MinimalistHero } from "@/components/ui/minimalist-hero";
 import { BehindTheScenesGallery } from "@/components/site/behind-the-scenes-gallery";
 import { Reveal, ImageReveal } from "@/components/site/reveal";
 import { SectionHeading } from "@/components/site/section-heading";
+import { JsonLd } from "@/components/site/json-ld";
 import { approachSteps, navLinks, site } from "@/lib/data";
+import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "About",
   description:
     "Tshabu Productions is a Cape Town photography and videography studio built on storytelling, visual quality and disciplined craft.",
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "About", path: "/about" },
+        ])}
+      />
       <MinimalistHero
         hideHeader
         logoText={site.shortName}

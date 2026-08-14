@@ -1,17 +1,18 @@
 import Link from "next/link";
-import type { Metadata } from "next";
 import { MinimalistHero } from "@/components/ui/minimalist-hero";
 import { Reveal } from "@/components/site/reveal";
 import { SectionHeading } from "@/components/site/section-heading";
 import { ProjectGrid } from "@/components/site/project-grid";
 import ScrollAdventure, { type ScrollAdventurePage } from "@/components/ui/animated-scroll";
 import { featuredProjects, navLinks, services, site } from "@/lib/data";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "Tshabu Productions — Photography & Videography in Cape Town",
   description:
     "Tshabu Productions creates timeless photography and cinematic videography for events, brands and businesses in Cape Town. We don't just take photos or film videos — we tell your story.",
-};
+  path: "/",
+});
 
 const showreelPages: ScrollAdventurePage[] = featuredProjects.slice(0, 4).map((project, i) => {
   const content = {
@@ -19,13 +20,28 @@ const showreelPages: ScrollAdventurePage[] = featuredProjects.slice(0, 4).map((p
     description: project.name,
   };
   return i % 2 === 0
-    ? { leftBgImage: null, rightBgImage: project.coverImage, leftContent: content, rightContent: null }
-    : { leftBgImage: project.coverImage, rightBgImage: null, leftContent: null, rightContent: content };
+    ? {
+        leftBgImage: null,
+        rightBgImage: project.coverImage,
+        rightImageAlt: `${project.name} — ${project.category}`,
+        leftContent: content,
+        rightContent: null,
+      }
+    : {
+        leftBgImage: project.coverImage,
+        leftImageAlt: `${project.name} — ${project.category}`,
+        rightBgImage: null,
+        leftContent: null,
+        rightContent: content,
+      };
 });
 
 export default function HomePage() {
   return (
     <>
+      <h1 className="sr-only">
+        Photography &amp; Videography Production Company in Cape Town
+      </h1>
       <MinimalistHero
         hideHeader
         logoText={site.shortName}
