@@ -48,7 +48,7 @@ export default async function ProjectPage({
           fill
           priority
           sizes="100vw"
-          className="object-cover grayscale"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/20" />
         <div className="container-edit relative z-10 flex w-full flex-col gap-6 pb-16 pt-40">
@@ -94,7 +94,7 @@ export default async function ProjectPage({
                 alt={`${project.name} production still ${i + 1}`}
                 fill
                 sizes="100vw"
-                className="object-cover grayscale"
+                className="object-cover"
               />
             </div>
           </ImageReveal>

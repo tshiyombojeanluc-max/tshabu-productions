@@ -38,7 +38,7 @@ export function ProjectCard({
           sizes="(max-width: 768px) 100vw, 50vw"
           priority={priority}
           className={cn(
-            "object-cover grayscale transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            "object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
             hovered && "scale-[1.05]"
           )}
         />

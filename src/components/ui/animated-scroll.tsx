@@ -157,7 +157,7 @@ export default function ScrollAdventure({ pages, className }: ScrollAdventurePro
               style={{ transform: leftTrans }}
             >
               <div
-                className="h-full w-full bg-cover bg-center bg-no-repeat grayscale"
+                className="h-full w-full bg-cover bg-center bg-no-repeat"
                 style={{ backgroundImage: page.leftBgImage ? `url(${page.leftBgImage})` : undefined }}
               >
                 <div className="absolute inset-0 bg-black/35" />
@@ -177,7 +177,7 @@ export default function ScrollAdventure({ pages, className }: ScrollAdventurePro
               style={{ transform: rightTrans }}
             >
               <div
-                className="h-full w-full bg-cover bg-center bg-no-repeat grayscale"
+                className="h-full w-full bg-cover bg-center bg-no-repeat"
                 style={{ backgroundImage: page.rightBgImage ? `url(${page.rightBgImage})` : undefined }}
               >
                 <div className="absolute inset-0 bg-black/35" />
