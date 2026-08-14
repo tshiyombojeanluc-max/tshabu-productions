@@ -136,7 +136,14 @@ export const MinimalistHero = ({
         </motion.button>
       </header>
 
-      <div className="relative grid w-full max-w-7xl flex-grow grid-cols-1 items-center md:grid-cols-3">
+      <div
+        className={cn(
+          "relative w-full max-w-7xl",
+          watermarkText
+            ? "flex flex-grow flex-col items-center justify-center gap-7 text-center md:grid md:grid-cols-3 md:items-center md:gap-0 md:text-left"
+            : "grid flex-grow grid-cols-1 items-center md:grid-cols-3"
+        )}
+      >
         {watermarkText && (
           <motion.div
             aria-hidden="true"
@@ -146,7 +153,7 @@ export const MinimalistHero = ({
               opacity: { duration: 1, delay: 0.3 },
               y: { duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 },
             }}
-            className="pointer-events-none absolute inset-x-0 top-[-32px] bottom-auto z-0 flex h-[460px] select-none flex-col items-center justify-between py-4 text-center font-sans md:top-0 md:bottom-0 md:h-auto md:justify-center md:py-0"
+            className="pointer-events-none z-0 order-1 flex select-none flex-col items-center gap-1 text-center font-sans md:absolute md:inset-x-0 md:top-0 md:bottom-0 md:order-none md:h-auto md:justify-center md:gap-0 md:py-0"
           >
             <span
               className={cn(
@@ -171,10 +178,7 @@ export const MinimalistHero = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1 }}
-          className={cn(
-            "z-20 order-2 text-center md:order-1 md:col-start-1 md:text-left",
-            watermarkText && "self-end pb-8 md:self-auto md:pb-0"
-          )}
+          className="z-20 order-2 text-center md:order-1 md:col-start-1 md:text-left"
         >
           <p className={cn("mx-auto max-w-xs text-sm leading-relaxed md:mx-0", dark ? "text-tshabu-paper/80" : "text-foreground/80")}>
             {mainText}
