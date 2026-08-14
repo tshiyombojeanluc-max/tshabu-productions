@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Reveal, ImageReveal } from "@/components/site/reveal";
 import { getAdjacentProjects, getProjectBySlug, projects } from "@/lib/data";
+import { cn } from "@/lib/utils";
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -86,19 +87,24 @@ export default async function ProjectPage({
       </section>
 
       <div className="space-y-6 pb-20 md:pb-28">
-        {project.gallery.map((src, i) => (
-          <ImageReveal key={src + i} className="container-edit">
-            <div className="relative aspect-[16/9] w-full bg-tshabu-charcoal">
+        {project.gallery.map((photo, i) => {
+          const isPortrait = photo.width / photo.height < 0.9;
+          return (
+            <ImageReveal
+              key={photo.src}
+              className={cn("container-edit", isPortrait && "flex justify-center")}
+            >
               <Image
-                src={src}
+                src={photo.src}
                 alt={`${project.name} production still ${i + 1}`}
-                fill
-                sizes="100vw"
-                className="object-cover"
+                width={photo.width}
+                height={photo.height}
+                sizes={isPortrait ? "(max-width: 768px) 100vw, 576px" : "100vw"}
+                className={cn("h-auto w-full bg-tshabu-charcoal", isPortrait && "max-w-xl")}
               />
-            </div>
-          </ImageReveal>
-        ))}
+            </ImageReveal>
+          );
+        })}
       </div>
 
       <section className="container-edit pb-28 md:pb-40">
