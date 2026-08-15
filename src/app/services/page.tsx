@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/site/reveal";
 import { JsonLd } from "@/components/site/json-ld";
+import { SectionHeading } from "@/components/site/section-heading";
 import {
   Accordion,
   AccordionContent,
@@ -26,12 +27,52 @@ const servicesJsonLd = services.map((service) => ({
   areaServed: { "@type": "City", name: "Cape Town" },
 }));
 
+// Grounded in the service offerings above — no invented pricing, guarantees or claims.
+const faqs = [
+  {
+    question: "What services does Tshabu Productions offer?",
+    answer:
+      "Photography, videography, full-day event coverage and post-production — editing, colour grading and delivery. See the breakdown above for what's included in each.",
+  },
+  {
+    question: "Do you offer photography and videography together for the same event?",
+    answer:
+      "Yes. Our Event Coverage service puts one team on-site for the full day, covering photography and videography together, so nothing about your event goes undocumented.",
+  },
+  {
+    question: "How quickly will I get my photos or video?",
+    answer:
+      "Event photography includes same-day previews. Event coverage is typically delivered the same week, and every project is edited and graded in-house with a fast turnaround.",
+  },
+  {
+    question: "Where are you based, and do you travel for shoots?",
+    answer:
+      `We're based in ${site.location} and work with businesses, schools and individuals on location for events, brand shoots and productions.`,
+  },
+  {
+    question: "How do I book a session?",
+    answer:
+      "Get in touch through our contact page, by email or by phone — tell us about your event or project and we'll confirm availability and next steps.",
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: { "@type": "Answer", text: faq.answer },
+  })),
+};
+
 export default function ServicesPage() {
   return (
     <>
       {servicesJsonLd.map((data, i) => (
         <JsonLd key={services[i].id} data={data} />
       ))}
+      <JsonLd data={faqJsonLd} />
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
@@ -82,6 +123,32 @@ export default function ServicesPage() {
                       ))}
                     </ul>
                   </div>
+                </AccordionContent>
+              </Reveal>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </section>
+
+      <section className="container-edit pb-28 md:pb-40">
+        <SectionHeading label="FAQ" title="Common Questions" className="mb-16" />
+        <Accordion className="border-t border-tshabu-graphite/20">
+          {faqs.map((faq, i) => (
+            <AccordionItem
+              key={faq.question}
+              value={`faq-${i}`}
+              className="!border-b border-tshabu-graphite/20 py-2"
+            >
+              <Reveal delay={i * 0.05}>
+                <AccordionTrigger className="!rounded-none !border-none !py-8 hover:!no-underline focus-visible:!ring-0">
+                  <span className="max-w-2xl pr-6 text-lg font-medium tracking-tight sm:text-xl">
+                    {faq.question}
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent className="!pb-10">
+                  <p className="max-w-2xl text-base leading-relaxed text-tshabu-graphite">
+                    {faq.answer}
+                  </p>
                 </AccordionContent>
               </Reveal>
             </AccordionItem>

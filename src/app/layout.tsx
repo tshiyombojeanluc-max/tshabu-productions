@@ -97,7 +97,7 @@ const websiteJsonLd = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${kaushanScript.variable} antialiased`}>
+    <html lang="en-ZA" className={`${inter.variable} ${kaushanScript.variable} antialiased`}>
       <body className="min-h-screen bg-background text-foreground selection:bg-tshabu-black selection:text-tshabu-paper">
         <JsonLd data={organizationJsonLd} />
         <JsonLd data={websiteJsonLd} />

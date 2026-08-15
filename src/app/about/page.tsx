@@ -33,9 +33,9 @@ export default function AboutPage() {
         imageAlt="Portrait of a Tshabu Productions photographer on set"
         overlayText={{ part1: "We capture.", part2: "We create." }}
         socialLinks={[
-          { icon: <Globe className="h-5 w-5" />, href: "https://www.facebook.com/tshabu.elie" },
-          { icon: <ImageIcon className="h-5 w-5" />, href: "https://www.instagram.com/tshabuproductions" },
-          { icon: <Video className="h-5 w-5" />, href: "https://www.tiktok.com/@tshabu.production" },
+          { icon: <Globe className="h-5 w-5" />, href: "https://www.facebook.com/tshabu.elie", label: "Facebook" },
+          { icon: <ImageIcon className="h-5 w-5" />, href: "https://www.instagram.com/tshabuproductions", label: "Instagram" },
+          { icon: <Video className="h-5 w-5" />, href: "https://www.tiktok.com/@tshabu.production", label: "TikTok" },
         ]}
         locationText={site.location}
         className="pt-20"

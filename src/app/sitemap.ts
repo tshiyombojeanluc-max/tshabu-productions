@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
     changeFrequency: "monthly",
     priority: 0.7,
+    images: project.gallery.map((photo) => `${SITE_URL}${photo.src}`),
   }));
 
   return [...staticRoutes, ...projectRoutes];

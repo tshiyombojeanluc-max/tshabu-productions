@@ -16,7 +16,7 @@ interface MinimalistHeroProps {
     part1: string;
     part2: string;
   };
-  socialLinks: { icon: React.ReactNode; href: string }[];
+  socialLinks: { icon: React.ReactNode; href: string; label: string }[];
   locationText: string;
   className?: string;
   hideHeader?: boolean;
@@ -60,16 +60,19 @@ const NavLink = ({
 const SocialIcon = ({
   href,
   icon,
+  label,
   dark,
 }: {
   href: string;
   icon: React.ReactNode;
+  label: string;
   dark?: boolean;
 }) => (
   <a
     href={href}
     target="_blank"
     rel="noopener noreferrer"
+    aria-label={label}
     className={cn(
       "transition-colors",
       dark ? "text-tshabu-paper/60 hover:text-tshabu-paper" : "text-foreground/60 hover:text-foreground"
@@ -269,7 +272,7 @@ export const MinimalistHero = ({
           className="flex items-center space-x-4"
         >
           {socialLinks.map((link, index) => (
-            <SocialIcon key={index} href={link.href} icon={link.icon} dark={dark} />
+            <SocialIcon key={index} href={link.href} icon={link.icon} label={link.label} dark={dark} />
           ))}
         </motion.div>
         <motion.div
