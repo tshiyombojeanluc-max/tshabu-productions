@@ -108,7 +108,13 @@ export const MinimalistHero = ({
   streamImages,
 }: MinimalistHeroProps) => {
   const baseClassName = cn(
-    "relative flex h-screen w-full flex-col items-center justify-between overflow-hidden p-8 font-sans md:p-12",
+    "relative flex w-full flex-col items-center justify-between overflow-hidden p-8 font-sans md:p-12",
+    // The watermark hero (currently only the homepage) no longer forces a
+    // full 100vh on mobile — that combined with vertically-centered content
+    // left large, unintentional empty gaps above and below a fairly compact
+    // amount of content. Other MinimalistHero callers (e.g. About) keep the
+    // original full-height behaviour unchanged.
+    watermarkText ? "h-auto min-h-[78svh] md:h-screen" : "h-screen",
     dark ? "bg-tshabu-black text-tshabu-paper" : "bg-background text-foreground",
     className
   );
@@ -148,7 +154,7 @@ export const MinimalistHero = ({
         className={cn(
           "relative w-full max-w-7xl",
           watermarkText
-            ? "flex flex-grow flex-col items-center justify-center gap-7 text-center md:grid md:grid-cols-3 md:items-center md:gap-0 md:text-left"
+            ? "flex flex-grow flex-col items-center justify-start gap-6 pt-4 text-center md:grid md:grid-cols-3 md:items-center md:justify-center md:gap-0 md:pt-0 md:text-left"
             : "grid flex-grow grid-cols-1 items-center md:grid-cols-3"
         )}
       >
@@ -236,7 +242,7 @@ export const MinimalistHero = ({
             <a
               href={ctaLink}
               className={cn(
-                "block w-fit px-8 py-4 text-sm uppercase tracking-[0.2em] transition-colors",
+                "block w-fit px-6 py-3 text-xs uppercase tracking-[0.2em] transition-colors md:px-8 md:py-4 md:text-sm",
                 dark
                   ? "bg-tshabu-paper text-tshabu-black hover:bg-tshabu-paper/90"
                   : "bg-tshabu-black text-tshabu-paper hover:bg-tshabu-charcoal"

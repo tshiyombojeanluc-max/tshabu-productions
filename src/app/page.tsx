@@ -73,7 +73,7 @@ export default function HomePage() {
         streamImages={heroStreamImages}
       />
 
-      <section className="container-edit py-28 md:py-40">
+      <section className="container-edit py-16 md:py-40">
         <Reveal>
           <p className="max-w-4xl text-4xl font-medium leading-[1.15] tracking-tight sm:text-5xl md:text-6xl">
             We don&rsquo;t just take photos or film videos. We tell your story.
