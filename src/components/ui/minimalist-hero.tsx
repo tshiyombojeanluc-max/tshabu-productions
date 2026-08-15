@@ -189,11 +189,19 @@ export const MinimalistHero = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1 }}
           className={cn(
-            "z-20 text-center md:order-1 md:col-start-1 md:text-left",
-            watermarkText ? "order-3" : "order-2"
+            "z-20 text-center",
+            watermarkText
+              ? "order-3 md:absolute md:inset-x-0 md:top-[87%] md:text-center"
+              : "order-2 md:order-1 md:col-start-1 md:text-left"
           )}
         >
-          <p className={cn("mx-auto max-w-xs text-sm leading-relaxed md:mx-0", dark ? "text-tshabu-paper/80" : "text-foreground/80")}>
+          <p
+            className={cn(
+              "mx-auto text-sm leading-relaxed",
+              watermarkText ? "max-w-2xl" : "max-w-xs md:mx-0",
+              dark ? "text-tshabu-paper/80" : "text-foreground/80"
+            )}
+          >
             {mainText}
           </p>
           <a
