@@ -186,7 +186,10 @@ export const MinimalistHero = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1 }}
-          className="z-20 order-2 text-center md:order-1 md:col-start-1 md:text-left"
+          className={cn(
+            "z-20 text-center md:order-1 md:col-start-1 md:text-left",
+            watermarkText ? "order-3" : "order-2"
+          )}
         >
           <p className={cn("mx-auto max-w-xs text-sm leading-relaxed md:mx-0", dark ? "text-tshabu-paper/80" : "text-foreground/80")}>
             {mainText}
@@ -200,7 +203,7 @@ export const MinimalistHero = ({
           >
             Read More
           </a>
-          {ctaText && ctaLink && (
+          {ctaText && ctaLink && !watermarkText && (
             <a
               href={ctaLink}
               className={cn(
@@ -214,6 +217,27 @@ export const MinimalistHero = ({
             </a>
           )}
         </motion.div>
+
+        {watermarkText && ctaText && ctaLink && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.1 }}
+            className="z-20 order-2 flex justify-center md:order-none md:absolute md:inset-x-0 md:top-[64%]"
+          >
+            <a
+              href={ctaLink}
+              className={cn(
+                "block w-fit px-8 py-4 text-sm uppercase tracking-[0.2em] transition-colors",
+                dark
+                  ? "bg-tshabu-paper text-tshabu-black hover:bg-tshabu-paper/90"
+                  : "bg-tshabu-black text-tshabu-paper hover:bg-tshabu-charcoal"
+              )}
+            >
+              {ctaText}
+            </a>
+          </motion.div>
+        )}
 
         {imageSrc && (
           <div className="relative order-1 md:order-2 flex justify-center items-center h-full">
