@@ -29,8 +29,9 @@ export default function AboutPage() {
         navLinks={navLinks}
         mainText="Tshabu Productions is a Cape Town photography and videography studio. We partner with businesses, schools and individuals to build visual stories shaped by discipline, patience and a clear point of view."
         readMoreLink="/work"
-        imageSrc="/images/stock/about-portrait.jpg"
-        imageAlt="Portrait of a Tshabu Productions photographer on set"
+        imageSrc="/images/projects/one-year-birthday/one-year-birthday-4.jpg"
+        imageAlt="A toddler at her first birthday cake smash photoshoot"
+        imageFocalPoint="50% 25%"
         overlayText={{ part1: "We capture.", part2: "We create." }}
         socialLinks={[
           { icon: <Globe className="h-5 w-5" />, href: "https://www.facebook.com/tshabu.elie", label: "Facebook" },
