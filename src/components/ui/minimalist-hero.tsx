@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { ImageStreamHero, type StreamImage } from "@/components/ui/image-stream-hero";
 
 interface MinimalistHeroProps {
   logoText: string;
@@ -33,6 +34,8 @@ interface MinimalistHeroProps {
   /** Optional solid CTA button rendered below the "Read More" link. */
   ctaText?: string;
   ctaLink?: string;
+  /** When provided, renders an animated corridor of images as the hero's background instead of a flat colour. */
+  streamImages?: StreamImage[];
 }
 
 const NavLink = ({
@@ -102,15 +105,16 @@ export const MinimalistHero = ({
   imageFocalPoint = "50% 50%",
   ctaText,
   ctaLink,
+  streamImages,
 }: MinimalistHeroProps) => {
-  return (
-    <div
-      className={cn(
-        "relative flex h-screen w-full flex-col items-center justify-between overflow-hidden p-8 font-sans md:p-12",
-        dark ? "bg-tshabu-black text-tshabu-paper" : "bg-background text-foreground",
-        className
-      )}
-    >
+  const baseClassName = cn(
+    "relative flex h-screen w-full flex-col items-center justify-between overflow-hidden p-8 font-sans md:p-12",
+    dark ? "bg-tshabu-black text-tshabu-paper" : "bg-background text-foreground",
+    className
+  );
+
+  const content = (
+    <>
       <header className={cn("z-30 flex w-full max-w-7xl items-center justify-between", hideHeader && "sr-only")}>
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -157,7 +161,7 @@ export const MinimalistHero = ({
               opacity: { duration: 1, delay: 0.3 },
               y: { duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 },
             }}
-            className="pointer-events-none z-0 order-1 flex select-none flex-col items-center gap-1 text-center font-sans md:absolute md:inset-x-0 md:top-0 md:bottom-0 md:order-none md:h-auto md:justify-center md:gap-0 md:py-0"
+            className="pointer-events-none z-10 order-1 flex select-none flex-col items-center gap-1 text-center font-sans md:absolute md:inset-x-0 md:top-0 md:bottom-0 md:order-none md:h-auto md:justify-center md:gap-0 md:py-0"
           >
             <span
               className={cn(
@@ -284,6 +288,26 @@ export const MinimalistHero = ({
           {locationText}
         </motion.div>
       </footer>
-    </div>
+    </>
   );
+
+  if (streamImages && streamImages.length > 0) {
+    return (
+      <ImageStreamHero
+        images={streamImages}
+        className={cn(baseClassName, "[&_img]:grayscale [&_img]:contrast-110")}
+      >
+        <div
+          aria-hidden="true"
+          className={cn(
+            "pointer-events-none absolute inset-0 z-0",
+            dark ? "bg-tshabu-black/70" : "bg-background/80"
+          )}
+        />
+        {content}
+      </ImageStreamHero>
+    );
+  }
+
+  return <div className={baseClassName}>{content}</div>;
 };

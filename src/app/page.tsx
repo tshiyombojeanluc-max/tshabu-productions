@@ -4,8 +4,24 @@ import { Reveal } from "@/components/site/reveal";
 import { SectionHeading } from "@/components/site/section-heading";
 import { ProjectGrid } from "@/components/site/project-grid";
 import ScrollAdventure, { type ScrollAdventurePage } from "@/components/ui/animated-scroll";
+import type { StreamImage } from "@/components/ui/image-stream-hero";
 import { featuredProjects, navLinks, services, site } from "@/lib/data";
 import { buildMetadata } from "@/lib/seo";
+
+// A curated spread of real client photos across all 5 projects, cycled
+// through the hero's animated corridor.
+const heroStreamImages: StreamImage[] = [
+  { src: "/images/projects/yit-gala/yit-gala-1.jpg", alt: "Guests at the YIT Gala dinner table" },
+  { src: "/images/projects/one-year-birthday/one-year-birthday-4.jpg", alt: "A toddler at her first birthday cake smash" },
+  { src: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-1.jpg", alt: "A speaker at the Myles Munroe Foundation event" },
+  { src: "/images/projects/jazz-and-wine/jazz-and-wine-2.jpg", alt: "Guests at the Jazz & Wine event" },
+  { src: "/images/projects/50th-birthday/50th-birthday-3.jpg", alt: "Guests at a 50th birthday celebration" },
+  { src: "/images/projects/yit-gala/yit-gala-6.jpg", alt: "A guest laughing at the YIT Gala" },
+  { src: "/images/projects/jazz-and-wine/jazz-and-wine-6.jpg", alt: "A musician performing at Jazz & Wine" },
+  { src: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-3.jpg", alt: "A speaker at the Myles Munroe Foundation event" },
+  { src: "/images/projects/one-year-birthday/one-year-birthday-1.jpg", alt: "A first birthday photoshoot" },
+  { src: "/images/projects/50th-birthday/50th-birthday-1.jpg", alt: "A 50th birthday celebration" },
+];
 
 export const metadata = buildMetadata({
   title: "Tshabu Productions — Photography & Videography in Cape Town",
@@ -54,6 +70,7 @@ export default function HomePage() {
         socialLinks={[]}
         locationText={site.location}
         className="pt-20"
+        streamImages={heroStreamImages}
       />
 
       <section className="container-edit py-28 md:py-40">
