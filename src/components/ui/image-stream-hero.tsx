@@ -73,6 +73,16 @@ export type CorridorPath = {
   turnExit?: number;
   /** Keyframe stops used to trace the curve. Raise only if motion looks faceted. @default 24 */
   stops?: number;
+  /**
+   * Progress (0–1) through the journey at which a card crosses from
+   * grayscale to full colour. Cards are born grayscale and cross-fade to
+   * colour as they pass this point, matching the moment they clear the
+   * watermark text and are about to run out toward the frame edge.
+   * @default 0.58
+   */
+  colorRevealAt?: number;
+  /** Width (0–1) of the grayscale-to-colour cross-fade, centred on `colorRevealAt`. @default 0.18 */
+  colorRevealSoftness?: number;
 };
 
 const PATH: Required<CorridorPath> = {
@@ -88,6 +98,8 @@ const PATH: Required<CorridorPath> = {
   turnBirth: 6,
   turnExit: 28,
   stops: 24,
+  colorRevealAt: 0.58,
+  colorRevealSoftness: 0.18,
 };
 
 /** Sample the path once so the CSS keyframes trace the real curve. */
@@ -104,10 +116,20 @@ function keyframes(dir: 1 | -1, name: string, p: Required<CorridorPath>) {
     const rail =
       p.railExit - (p.railExit - p.railBirth) * Math.pow(1 - u, p.fan);
     const turn = p.turnBirth + (p.turnExit - p.turnBirth) * u;
+    // Cross-fade grayscale -> colour around colorRevealAt, clamped to [0,1]
+    // so cards are fully grayscale at birth and fully colour by the time
+    // they're about to exit the frame.
+    const revealStart = p.colorRevealAt - p.colorRevealSoftness / 2;
+    const revealEnd = p.colorRevealAt + p.colorRevealSoftness / 2;
+    const revealT = Math.min(
+      1,
+      Math.max(0, (u - revealStart) / (revealEnd - revealStart)),
+    );
+    const gray = 1 - revealT;
     steps.push(
       `${(u * 100).toFixed(2)}%{transform:translate3d(${(dir * rail).toFixed(
         2,
-      )}cqw,0,${z.toFixed(2)}cqw) rotateY(${(-dir * turn).toFixed(2)}deg)}`,
+      )}cqw,0,${z.toFixed(2)}cqw) rotateY(${(-dir * turn).toFixed(2)}deg);filter:grayscale(${gray.toFixed(3)})}`,
     );
   }
   return `@keyframes ${name}{${steps.join("")}}`;

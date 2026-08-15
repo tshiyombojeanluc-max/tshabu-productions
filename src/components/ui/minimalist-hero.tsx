@@ -329,7 +329,7 @@ export const MinimalistHero = ({
     return (
       <ImageStreamHero
         images={streamImages}
-        className={cn(baseClassName, "[&_img]:grayscale [&_img]:contrast-110")}
+        className={cn(baseClassName, "[&_img]:contrast-110")}
       >
         <div
           aria-hidden="true"
