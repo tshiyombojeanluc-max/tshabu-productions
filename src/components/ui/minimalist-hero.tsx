@@ -107,6 +107,8 @@ export const MinimalistHero = ({
   ctaLink,
   streamImages,
 }: MinimalistHeroProps) => {
+  const hasStream = Boolean(streamImages && streamImages.length > 0);
+
   const baseClassName = cn(
     "relative flex h-screen w-full flex-col items-center justify-between overflow-hidden p-8 font-sans md:p-12",
     dark ? "bg-tshabu-black text-tshabu-paper" : "bg-background text-foreground",
@@ -156,7 +158,7 @@ export const MinimalistHero = ({
           <motion.div
             aria-hidden="true"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1, y: [0, -14, 0] }}
+            animate={{ opacity: hasStream ? 0.6 : 1, y: [0, -14, 0] }}
             transition={{
               opacity: { duration: 1, delay: 0.3 },
               y: { duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 },
@@ -223,7 +225,7 @@ export const MinimalistHero = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1.1 }}
-            className="z-20 order-2 flex justify-center md:order-none md:absolute md:inset-x-0 md:top-[64%]"
+            className="z-20 order-2 flex justify-center md:order-none md:absolute md:inset-x-0 md:top-[77%]"
           >
             <a
               href={ctaLink}
@@ -325,7 +327,7 @@ export const MinimalistHero = ({
           aria-hidden="true"
           className={cn(
             "pointer-events-none absolute inset-0 z-0",
-            dark ? "bg-tshabu-black/70" : "bg-background/80"
+            dark ? "bg-tshabu-black/45" : "bg-background/50"
           )}
         />
         {content}
