@@ -107,8 +107,6 @@ export const MinimalistHero = ({
   ctaLink,
   streamImages,
 }: MinimalistHeroProps) => {
-  const hasStream = Boolean(streamImages && streamImages.length > 0);
-
   const baseClassName = cn(
     "relative flex h-screen w-full flex-col items-center justify-between overflow-hidden p-8 font-sans md:p-12",
     dark ? "bg-tshabu-black text-tshabu-paper" : "bg-background text-foreground",
@@ -158,7 +156,7 @@ export const MinimalistHero = ({
           <motion.div
             aria-hidden="true"
             initial={{ opacity: 0 }}
-            animate={{ opacity: hasStream ? 0.6 : 1, y: [0, -14, 0] }}
+            animate={{ opacity: 1, y: [0, -14, 0] }}
             transition={{
               opacity: { duration: 1, delay: 0.3 },
               y: { duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 },
