@@ -7,10 +7,13 @@ import { SITE_URL, DEFAULT_OG_IMAGE, absoluteUrl } from "@/lib/seo";
 import { site, socialLinks } from "@/lib/data";
 import "./globals.css";
 
+// Inter ships as a variable font — loading it without a `weight` array
+// serves one variable-weight file instead of a separate static file per
+// weight (this site uses 400/500/600/700/800), per Next's own guidance.
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 // Matches the brush-script "Tshabu" wordmark in the logo.
@@ -18,6 +21,7 @@ const kaushanScript = Kaushan_Script({
   variable: "--font-script",
   subsets: ["latin"],
   weight: "400",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
