@@ -103,6 +103,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en-ZA" className={`${inter.variable} ${kaushanScript.variable} antialiased`}>
       <body className="min-h-screen bg-background text-foreground selection:bg-tshabu-black selection:text-tshabu-paper">
+        {/*
+          Scroll-reveal animations (Reveal/ImageReveal/etc.) start every
+          section at opacity:0 (or, for gallery images, a zero-height
+          clip-path) and only reveal once framer-motion's JS detects the
+          element has scrolled into view. Those hidden states are baked
+          directly into the server-rendered HTML, so any visitor, crawler,
+          or tool where JS is disabled, blocked, or fails sees an almost
+          entirely blank page — confirmed by rendering the site with
+          JavaScript off. This forces every animated element fully visible
+          whenever JS isn't running, so content is never gated behind it.
+        */}
+        <noscript>
+          <style>{`* { opacity: 1 !important; transform: none !important; clip-path: none !important; }`}</style>
+        </noscript>
         <JsonLd data={organizationJsonLd} />
         <JsonLd data={websiteJsonLd} />
         <Navbar />
