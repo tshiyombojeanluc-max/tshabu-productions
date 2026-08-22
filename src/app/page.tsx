@@ -82,12 +82,16 @@ export default function HomePage() {
           on small viewports only. Every piece of copy the desktop hero
           carries (wordmark, tagline, Read More, CTA, location) still
           appears here — just distributed across the component's own
-          immediate text slots and its scroll-revealed content area. */}
+          immediate text slots and its scroll-revealed content area.
+          Media: black-and-white artistic camera shots (self-hosted, not
+          hot-linked to Unsplash — see git history for why: a real user's
+          ad/privacy blocker silently broke images.unsplash.com hotlinks
+          on this site before). Brand/mood imagery, not portfolio work. */}
       <div className="md:hidden">
         <ScrollExpandMedia
           mediaType="image"
-          mediaSrc="/images/projects/jazz-and-wine/jazz-and-wine-6.jpg"
-          bgImageSrc="/images/projects/yit-gala/yit-gala-2.jpg"
+          mediaSrc="/images/hero/camera-artistic.jpg"
+          bgImageSrc="/images/hero/lens-dark.jpg"
           title="Tshabu Productions"
           date={site.location}
           scrollToExpand="Photography · Videography · Storytelling"
