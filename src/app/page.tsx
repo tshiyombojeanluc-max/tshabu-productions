@@ -67,7 +67,6 @@ export default function HomePage() {
           logoText={site.shortName}
           navLinks={navLinks}
           mainText="Photography · Videography · Storytelling. Timeless photo and cinematic video for events, brands and businesses in Cape Town."
-          readMoreLink="/work"
           ctaText="Book Your Session →"
           ctaLink="/contact"
           watermarkText={["Tshabu", "Productions"]}
@@ -80,9 +79,9 @@ export default function HomePage() {
 
       {/* Mobile hero: scroll-expand media hero, replacing the corridor hero
           on small viewports only. Every piece of copy the desktop hero
-          carries (wordmark, tagline, Read More, CTA, location) still
-          appears here — just distributed across the component's own
-          immediate text slots and its scroll-revealed content area.
+          carries (wordmark, tagline, CTA, location) still appears here —
+          just distributed across the component's own immediate text slots
+          and its scroll-revealed content area.
           Media: black-and-white artistic camera shots (self-hosted, not
           hot-linked to Unsplash — see git history for why: a real user's
           ad/privacy blocker silently broke images.unsplash.com hotlinks
@@ -100,12 +99,6 @@ export default function HomePage() {
             <p className="text-sm leading-relaxed text-foreground/80">
               {"Photography · Videography · Storytelling. Timeless photo and cinematic video for events, brands and businesses in Cape Town."}
             </p>
-            <Link
-              href="/work"
-              className="text-sm font-medium text-foreground underline decoration-from-font"
-            >
-              Read More
-            </Link>
             <Link
               href="/contact"
               className="block w-fit bg-tshabu-black px-8 py-4 text-sm uppercase tracking-[0.2em] text-tshabu-paper transition-colors hover:bg-tshabu-charcoal"

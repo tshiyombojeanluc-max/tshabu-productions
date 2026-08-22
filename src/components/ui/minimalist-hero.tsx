@@ -10,7 +10,6 @@ interface MinimalistHeroProps {
   logoText: string;
   navLinks: { label: string; href: string }[];
   mainText: string;
-  readMoreLink: string;
   imageSrc?: string;
   imageAlt?: string;
   overlayText?: {
@@ -31,7 +30,7 @@ interface MinimalistHeroProps {
   imageZoom?: number;
   /** CSS transform-origin (e.g. "60% 40%") controlling which part of the photo the zoom anchors to. */
   imageFocalPoint?: string;
-  /** Optional solid CTA button rendered below the "Read More" link. */
+  /** Optional solid CTA button rendered below the supporting text. */
   ctaText?: string;
   ctaLink?: string;
   /** When provided, renders an animated corridor of images as the hero's background instead of a flat colour. */
@@ -89,7 +88,6 @@ export const MinimalistHero = ({
   logoText,
   navLinks,
   mainText,
-  readMoreLink,
   imageSrc,
   imageAlt,
   overlayText,
@@ -208,15 +206,6 @@ export const MinimalistHero = ({
           >
             {mainText}
           </p>
-          <a
-            href={readMoreLink}
-            className={cn(
-              "mt-4 inline-block text-sm font-medium underline decoration-from-font",
-              dark ? "text-tshabu-paper" : "text-foreground"
-            )}
-          >
-            Read More
-          </a>
           {ctaText && ctaLink && !watermarkText && (
             <a
               href={ctaLink}

@@ -28,7 +28,6 @@ export default function AboutPage() {
         logoText={site.shortName}
         navLinks={navLinks}
         mainText="Tshabu Productions is a Cape Town photography and videography studio. We partner with businesses, schools and individuals to build visual stories shaped by discipline, patience and a clear point of view."
-        readMoreLink="/work"
         imageSrc="/images/projects/one-year-birthday/one-year-birthday-4.jpg"
         imageAlt="A toddler at her first birthday cake smash photoshoot"
         imageFocalPoint="50% 25%"
