@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MinimalistHero } from "@/components/ui/minimalist-hero";
+import ScrollExpandMedia from "@/components/ui/scroll-expansion-hero";
 import { Reveal } from "@/components/site/reveal";
 import { SectionHeading } from "@/components/site/section-heading";
 import { ProjectGrid } from "@/components/site/project-grid";
@@ -58,20 +59,58 @@ export default function HomePage() {
       <h1 className="sr-only">
         Photography &amp; Videography Production Company in Cape Town
       </h1>
-      <MinimalistHero
-        hideHeader
-        logoText={site.shortName}
-        navLinks={navLinks}
-        mainText="Photography · Videography · Storytelling. Timeless photo and cinematic video for events, brands and businesses in Cape Town."
-        readMoreLink="/work"
-        ctaText="Book Your Session →"
-        ctaLink="/contact"
-        watermarkText={["Tshabu", "Productions"]}
-        socialLinks={[]}
-        locationText={site.location}
-        className="pt-20"
-        streamImages={heroStreamImages}
-      />
+
+      {/* Desktop hero: unchanged — the animated image-corridor hero. */}
+      <div className="hidden md:block">
+        <MinimalistHero
+          hideHeader
+          logoText={site.shortName}
+          navLinks={navLinks}
+          mainText="Photography · Videography · Storytelling. Timeless photo and cinematic video for events, brands and businesses in Cape Town."
+          readMoreLink="/work"
+          ctaText="Book Your Session →"
+          ctaLink="/contact"
+          watermarkText={["Tshabu", "Productions"]}
+          socialLinks={[]}
+          locationText={site.location}
+          className="pt-20"
+          streamImages={heroStreamImages}
+        />
+      </div>
+
+      {/* Mobile hero: scroll-expand media hero, replacing the corridor hero
+          on small viewports only. Every piece of copy the desktop hero
+          carries (wordmark, tagline, Read More, CTA, location) still
+          appears here — just distributed across the component's own
+          immediate text slots and its scroll-revealed content area. */}
+      <div className="md:hidden">
+        <ScrollExpandMedia
+          mediaType="image"
+          mediaSrc="/images/projects/jazz-and-wine/jazz-and-wine-6.jpg"
+          bgImageSrc="/images/projects/yit-gala/yit-gala-2.jpg"
+          title="Tshabu Productions"
+          date={site.location}
+          scrollToExpand="Photography · Videography · Storytelling"
+        >
+          <div className="mx-auto flex max-w-sm flex-col items-center gap-6 text-center">
+            <p className="text-sm leading-relaxed text-foreground/80">
+              {"Photography · Videography · Storytelling. Timeless photo and cinematic video for events, brands and businesses in Cape Town."}
+            </p>
+            <Link
+              href="/work"
+              className="text-sm font-medium text-foreground underline decoration-from-font"
+            >
+              Read More
+            </Link>
+            <Link
+              href="/contact"
+              className="block w-fit bg-tshabu-black px-8 py-4 text-sm uppercase tracking-[0.2em] text-tshabu-paper transition-colors hover:bg-tshabu-charcoal"
+            >
+              Book Your Session →
+            </Link>
+          </div>
+        </ScrollExpandMedia>
+      </div>
 
       <section className="container-edit py-16 md:py-40">
         <Reveal>
