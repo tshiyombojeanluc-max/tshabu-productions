@@ -1,7 +1,7 @@
 import { ProjectGrid } from "@/components/site/project-grid";
 import { Reveal } from "@/components/site/reveal";
 import { JsonLd } from "@/components/site/json-ld";
-import { projects } from "@/lib/data";
+import { getPublishedProjects } from "@/lib/galleries";
 import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata = buildMetadata({
@@ -11,7 +11,9 @@ export const metadata = buildMetadata({
   path: "/work",
 });
 
-export default function WorkPage() {
+export default async function WorkPage() {
+  const projects = await getPublishedProjects();
+
   return (
     <section className="container-edit pt-40 pb-28 md:pt-48 md:pb-40">
       <JsonLd
@@ -26,7 +28,11 @@ export default function WorkPage() {
           Portfolio
         </h1>
       </Reveal>
-      <ProjectGrid projects={projects} />
+      {projects.length > 0 ? (
+        <ProjectGrid projects={projects} />
+      ) : (
+        <p className="text-tshabu-graphite">New work is on its way — check back soon.</p>
+      )}
     </section>
   );
 }

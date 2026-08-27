@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
-import { projects } from "@/lib/data";
+import { getPublishedProjects } from "@/lib/galleries";
 import { SITE_URL } from "@/lib/seo";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
+  const projects = await getPublishedProjects();
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: SITE_URL, lastModified: now, changeFrequency: "monthly", priority: 1 },
@@ -18,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
     changeFrequency: "monthly",
     priority: 0.7,
-    images: project.gallery.map((photo) => `${SITE_URL}${photo.src}`),
+    images: project.gallery.map((photo) => photo.src),
   }));
 
   return [...staticRoutes, ...projectRoutes];

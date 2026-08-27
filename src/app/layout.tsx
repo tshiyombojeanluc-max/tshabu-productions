@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Kaushan_Script } from "next/font/google";
-import Navbar from "@/components/site/navbar";
-import Footer from "@/components/site/footer";
+import { SiteChrome } from "@/components/site/site-chrome";
 import { JsonLd } from "@/components/site/json-ld";
 import { SITE_URL, DEFAULT_OG_IMAGE, absoluteUrl } from "@/lib/seo";
 import { site, socialLinks } from "@/lib/data";
@@ -119,9 +118,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </noscript>
         <JsonLd data={organizationJsonLd} />
         <JsonLd data={websiteJsonLd} />
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );

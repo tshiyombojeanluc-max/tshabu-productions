@@ -20,6 +20,11 @@ export const socialLinks = [
   { label: "TikTok", href: "https://www.tiktok.com/@tshabu.production" },
 ];
 
+// Gallery/photo content used to live here as a hardcoded array. It's now
+// managed through /dashboard and served from Supabase — see
+// src/lib/galleries.ts, which still returns this exact shape so every
+// existing display component (ProjectGrid, ProjectCard, /work/[slug])
+// works unchanged.
 export type Project = {
   slug: string;
   name: string;
@@ -32,141 +37,6 @@ export type Project = {
   gallery: { src: string; width: number; height: number }[];
   credits: { role: string; name: string }[];
   featured: boolean;
-};
-
-export const projects: Project[] = [
-  {
-    slug: "yit-gala",
-    name: "YIT Gala",
-    category: "Event Coverage",
-    year: "2025",
-    client: "YIT",
-    description:
-      "A formal gala evening — candid table moments, speeches and the quiet in-between instants that a night like this is actually remembered by.",
-    coverImage: "/images/projects/yit-gala/yit-gala-1.jpg",
-    coverAspect: "landscape",
-    gallery: [
-      { src: "/images/projects/yit-gala/yit-gala-1.jpg", width: 1600, height: 1280 },
-      { src: "/images/projects/yit-gala/yit-gala-2.jpg", width: 1600, height: 1280 },
-      { src: "/images/projects/yit-gala/yit-gala-3.jpg", width: 1600, height: 1280 },
-      { src: "/images/projects/yit-gala/yit-gala-4.jpg", width: 1600, height: 1280 },
-      { src: "/images/projects/yit-gala/yit-gala-5.jpg", width: 1600, height: 1280 },
-      { src: "/images/projects/yit-gala/yit-gala-6.jpg", width: 1600, height: 1280 },
-      { src: "/images/projects/yit-gala/yit-gala-7.jpg", width: 1600, height: 1280 },
-      { src: "/images/projects/yit-gala/yit-gala-8.jpg", width: 1600, height: 2000 },
-      { src: "/images/projects/yit-gala/yit-gala-9.jpg", width: 1600, height: 1280 },
-      { src: "/images/projects/yit-gala/yit-gala-10.jpg", width: 1600, height: 1280 },
-    ],
-    credits: [{ role: "Photography", name: "Tshabu Productions" }],
-    featured: true,
-  },
-  {
-    slug: "myles-munroe-foundation",
-    name: "Myles Munroe Foundation",
-    category: "Event Coverage",
-    year: "2024",
-    client: "Myles Munroe Foundation",
-    description:
-      "Coverage of the Global Influence Leadership Award — speakers, presentations and the room itself, shot to hold up as a record of the occasion.",
-    coverImage: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-1.jpg",
-    coverAspect: "landscape",
-    gallery: [
-      { src: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-1.jpg", width: 1600, height: 1066 },
-      { src: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-2.jpg", width: 1600, height: 1066 },
-      { src: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-3.jpg", width: 1600, height: 1454 },
-      { src: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-4.jpg", width: 1600, height: 1467 },
-      { src: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-5.jpg", width: 1600, height: 1600 },
-    ],
-    credits: [{ role: "Photography", name: "Tshabu Productions" }],
-    featured: true,
-  },
-  {
-    slug: "jazz-and-wine",
-    name: "Jazz & Wine",
-    category: "Event Coverage",
-    year: "2026",
-    client: "Jazz & Wine",
-    description:
-      "An evening event built around music and atmosphere — low light, live performance and a crowd at ease, documented as it actually happened.",
-    coverImage: "/images/projects/jazz-and-wine/jazz-and-wine-1.jpg",
-    coverAspect: "portrait",
-    gallery: [
-      { src: "/images/projects/jazz-and-wine/jazz-and-wine-1.jpg", width: 1600, height: 2000 },
-      { src: "/images/projects/jazz-and-wine/jazz-and-wine-2.jpg", width: 1600, height: 2000 },
-      { src: "/images/projects/jazz-and-wine/jazz-and-wine-3.jpg", width: 1600, height: 2000 },
-      { src: "/images/projects/jazz-and-wine/jazz-and-wine-4.jpg", width: 1600, height: 2000 },
-      { src: "/images/projects/jazz-and-wine/jazz-and-wine-5.jpg", width: 1600, height: 2000 },
-      { src: "/images/projects/jazz-and-wine/jazz-and-wine-6.jpg", width: 1600, height: 2000 },
-      { src: "/images/projects/jazz-and-wine/jazz-and-wine-7.jpg", width: 1600, height: 2000 },
-      { src: "/images/projects/jazz-and-wine/jazz-and-wine-8.jpg", width: 1600, height: 1280 },
-      { src: "/images/projects/jazz-and-wine/jazz-and-wine-9.jpg", width: 1600, height: 1280 },
-      { src: "/images/projects/jazz-and-wine/jazz-and-wine-10.jpg", width: 1600, height: 1280 },
-    ],
-    credits: [{ role: "Photography", name: "Tshabu Productions" }],
-    featured: true,
-  },
-  {
-    slug: "50th-birthday",
-    name: "50th Birthday",
-    category: "Event Coverage",
-    year: "2025",
-    client: "Private Client",
-    description:
-      "A milestone birthday celebration — full-day coverage of the guests, the toasts and the small details that made the day theirs.",
-    coverImage: "/images/projects/50th-birthday/50th-birthday-1.jpg",
-    coverAspect: "square",
-    gallery: [
-      { src: "/images/projects/50th-birthday/50th-birthday-1.jpg", width: 1600, height: 1493 },
-      { src: "/images/projects/50th-birthday/50th-birthday-2.jpg", width: 1600, height: 1066 },
-      { src: "/images/projects/50th-birthday/50th-birthday-3.jpg", width: 1600, height: 1066 },
-      { src: "/images/projects/50th-birthday/50th-birthday-4.jpg", width: 1600, height: 1066 },
-      { src: "/images/projects/50th-birthday/50th-birthday-5.jpg", width: 1600, height: 1066 },
-      { src: "/images/projects/50th-birthday/50th-birthday-6.jpg", width: 1600, height: 1066 },
-      { src: "/images/projects/50th-birthday/50th-birthday-7.jpg", width: 1600, height: 1066 },
-      { src: "/images/projects/50th-birthday/50th-birthday-8.jpg", width: 1600, height: 2400 },
-      { src: "/images/projects/50th-birthday/50th-birthday-9.jpg", width: 1600, height: 2400 },
-      { src: "/images/projects/50th-birthday/50th-birthday-10.jpg", width: 1600, height: 2505 },
-    ],
-    credits: [{ role: "Photography", name: "Tshabu Productions" }],
-    featured: true,
-  },
-  {
-    slug: "one-year-birthday",
-    name: "1 Year Birthday",
-    category: "Event Coverage",
-    year: "2026",
-    client: "Private Client",
-    description:
-      "A first birthday, photographed the way it deserves to be — warm, unposed and built to be looked back on for years.",
-    coverImage: "/images/projects/one-year-birthday/one-year-birthday-1.jpg",
-    coverAspect: "portrait",
-    gallery: [
-      { src: "/images/projects/one-year-birthday/one-year-birthday-1.jpg", width: 1600, height: 2139 },
-      { src: "/images/projects/one-year-birthday/one-year-birthday-2.jpg", width: 1600, height: 2400 },
-      { src: "/images/projects/one-year-birthday/one-year-birthday-3.jpg", width: 1600, height: 2400 },
-      { src: "/images/projects/one-year-birthday/one-year-birthday-4.jpg", width: 1600, height: 2400 },
-      { src: "/images/projects/one-year-birthday/one-year-birthday-5.jpg", width: 1600, height: 2400 },
-      { src: "/images/projects/one-year-birthday/one-year-birthday-6.jpg", width: 1600, height: 2142 },
-      { src: "/images/projects/one-year-birthday/one-year-birthday-7.jpg", width: 1600, height: 1066 },
-      { src: "/images/projects/one-year-birthday/one-year-birthday-8.jpg", width: 1600, height: 1066 },
-      { src: "/images/projects/one-year-birthday/one-year-birthday-9.jpg", width: 1600, height: 2400 },
-      { src: "/images/projects/one-year-birthday/one-year-birthday-10.jpg", width: 1600, height: 2400 },
-    ],
-    credits: [{ role: "Photography", name: "Tshabu Productions" }],
-    featured: true,
-  },
-];
-
-export const featuredProjects = projects.filter((p) => p.featured);
-
-export const getProjectBySlug = (slug: string) =>
-  projects.find((p) => p.slug === slug);
-
-export const getAdjacentProjects = (slug: string) => {
-  const index = projects.findIndex((p) => p.slug === slug);
-  const prev = projects[(index - 1 + projects.length) % projects.length];
-  const next = projects[(index + 1) % projects.length];
-  return { prev, next };
 };
 
 export type Service = {

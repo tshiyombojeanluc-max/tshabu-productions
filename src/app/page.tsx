@@ -6,7 +6,8 @@ import { SectionHeading } from "@/components/site/section-heading";
 import { ProjectGrid } from "@/components/site/project-grid";
 import ScrollAdventure, { type ScrollAdventurePage } from "@/components/ui/animated-scroll";
 import type { StreamImage } from "@/components/ui/image-stream-hero";
-import { featuredProjects, navLinks, services, site } from "@/lib/data";
+import { navLinks, services, site } from "@/lib/data";
+import { getFeaturedProjects } from "@/lib/galleries";
 import { buildMetadata } from "@/lib/seo";
 
 // A curated spread of real client photos across all 5 projects, cycled
@@ -31,29 +32,34 @@ export const metadata = buildMetadata({
   path: "/",
 });
 
-const showreelPages: ScrollAdventurePage[] = featuredProjects.slice(0, 4).map((project, i) => {
-  const content = {
-    heading: `${project.category} — ${project.year}`,
-    description: project.name,
-  };
-  return i % 2 === 0
-    ? {
-        leftBgImage: null,
-        rightBgImage: project.coverImage,
-        rightImageAlt: `${project.name} — ${project.category}`,
-        leftContent: content,
-        rightContent: null,
-      }
-    : {
-        leftBgImage: project.coverImage,
-        leftImageAlt: `${project.name} — ${project.category}`,
-        rightBgImage: null,
-        leftContent: null,
-        rightContent: content,
-      };
-});
+function buildShowreelPages(projects: Awaited<ReturnType<typeof getFeaturedProjects>>): ScrollAdventurePage[] {
+  return projects.slice(0, 4).map((project, i) => {
+    const content = {
+      heading: `${project.category} — ${project.year}`,
+      description: project.name,
+    };
+    return i % 2 === 0
+      ? {
+          leftBgImage: null,
+          rightBgImage: project.coverImage,
+          rightImageAlt: `${project.name} — ${project.category}`,
+          leftContent: content,
+          rightContent: null,
+        }
+      : {
+          leftBgImage: project.coverImage,
+          leftImageAlt: `${project.name} — ${project.category}`,
+          rightBgImage: null,
+          leftContent: null,
+          rightContent: content,
+        };
+  });
+}
 
-export default function HomePage() {
+export default async function HomePage() {
+  const featuredProjects = await getFeaturedProjects();
+  const showreelPages = buildShowreelPages(featuredProjects);
+
   return (
     <>
       <h1 className="sr-only">
@@ -132,29 +138,33 @@ export default function HomePage() {
         </Reveal>
       </section>
 
-      <section id="selected-work">
-        <div className="container-edit mb-16">
-          <SectionHeading label="Selected Work" title="Recent Productions" />
-        </div>
-        <ScrollAdventure pages={showreelPages} />
-      </section>
+      {featuredProjects.length > 0 && (
+        <>
+          <section id="selected-work">
+            <div className="container-edit mb-16">
+              <SectionHeading label="Selected Work" title="Recent Productions" />
+            </div>
+            <ScrollAdventure pages={showreelPages} />
+          </section>
 
-      <section className="container-edit py-28 md:py-40">
-        <div className="mb-16 flex items-end justify-between gap-6">
-          <SectionHeading label="Portfolio" title="Full Portfolio" />
-          <Reveal>
-            <Link href="/work" className="label-caps hidden shrink-0 whitespace-nowrap underline underline-offset-4 sm:block">
-              View all work →
-            </Link>
-          </Reveal>
-        </div>
-        <ProjectGrid projects={featuredProjects.slice(0, 4)} />
-        <Reveal className="mt-12 sm:hidden">
-          <Link href="/work" className="label-caps underline underline-offset-4">
-            View all work →
-          </Link>
-        </Reveal>
-      </section>
+          <section className="container-edit py-28 md:py-40">
+            <div className="mb-16 flex items-end justify-between gap-6">
+              <SectionHeading label="Portfolio" title="Full Portfolio" />
+              <Reveal>
+                <Link href="/work" className="label-caps hidden shrink-0 whitespace-nowrap underline underline-offset-4 sm:block">
+                  View all work →
+                </Link>
+              </Reveal>
+            </div>
+            <ProjectGrid projects={featuredProjects.slice(0, 4)} />
+            <Reveal className="mt-12 sm:hidden">
+              <Link href="/work" className="label-caps underline underline-offset-4">
+                View all work →
+              </Link>
+            </Reveal>
+          </section>
+        </>
+      )}
 
       <section className="bg-tshabu-black py-28 text-tshabu-paper md:py-40">
         <div className="container-edit">

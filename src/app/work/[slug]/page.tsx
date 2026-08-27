@@ -4,13 +4,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Reveal, ImageReveal } from "@/components/site/reveal";
 import { JsonLd } from "@/components/site/json-ld";
-import { getAdjacentProjects, getProjectBySlug, projects } from "@/lib/data";
+import { getAdjacentProjects, getProjectBySlug } from "@/lib/galleries";
 import { cn } from "@/lib/utils";
 import { buildMetadata, breadcrumbJsonLd, absoluteUrl } from "@/lib/seo";
-
-export function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.slug }));
-}
 
 export async function generateMetadata({
   params,
@@ -18,7 +14,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const project = await getProjectBySlug(slug);
   if (!project) return {};
   return buildMetadata({
     title: project.name,
@@ -34,10 +30,10 @@ export default async function ProjectPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const project = await getProjectBySlug(slug);
   if (!project) notFound();
 
-  const { prev, next } = getAdjacentProjects(slug);
+  const { prev, next } = await getAdjacentProjects(slug);
 
   const creativeWorkJsonLd = {
     "@context": "https://schema.org",
