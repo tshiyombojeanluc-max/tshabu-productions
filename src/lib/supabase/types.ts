@@ -111,6 +111,34 @@ export type Database = {
         };
         Relationships: [];
       };
+      leads: {
+        Row: {
+          id: string;
+          first_name: string;
+          last_name: string;
+          email: string;
+          company: string | null;
+          project_type: string | null;
+          budget: string | null;
+          message: string;
+          status: "new" | "read" | "archived";
+          created_at: string;
+        };
+        Insert: {
+          first_name: string;
+          last_name: string;
+          email: string;
+          company?: string | null;
+          project_type?: string | null;
+          budget?: string | null;
+          message: string;
+          status?: "new" | "read" | "archived";
+        };
+        Update: {
+          status?: "new" | "read" | "archived";
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -122,3 +150,4 @@ export type Database = {
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type Gallery = Database["public"]["Tables"]["galleries"]["Row"];
 export type Photo = Database["public"]["Tables"]["photos"]["Row"];
+export type Lead = Database["public"]["Tables"]["leads"]["Row"];

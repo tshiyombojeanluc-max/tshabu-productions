@@ -5,7 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Images, ImagePlus, Upload, Settings, LogOut, Menu } from "lucide-react";
+import { LayoutDashboard, Images, ImagePlus, Upload, Inbox, Settings, LogOut, Menu } from "lucide-react";
 import { Sheet, SheetTrigger, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -18,6 +18,7 @@ const navItems = [
   { label: "Galleries", href: "/dashboard/galleries", icon: Images },
   { label: "Photos", href: "/dashboard/photos", icon: ImagePlus },
   { label: "Upload", href: "/dashboard/upload", icon: Upload },
+  { label: "Enquiries", href: "/dashboard/leads", icon: Inbox },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 

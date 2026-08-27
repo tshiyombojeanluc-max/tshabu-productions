@@ -3,7 +3,7 @@ import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import type { Gallery, Photo, Profile } from "@/lib/supabase/types";
+import type { Gallery, Lead, Photo, Profile } from "@/lib/supabase/types";
 
 /**
  * Resolves the signed-in user's profile. proxy.ts already redirects
@@ -101,38 +101,45 @@ export async function listAllPhotos(): Promise<PhotoWithGallery[]> {
 export type DashboardStats = {
   galleryCount: number;
   photoCount: number;
+  newLeadCount: number;
   recentGalleries: Gallery[];
   recentPhotos: PhotoWithGallery[];
+  recentLeads: Lead[];
 };
 
 export async function getDashboardStats(): Promise<DashboardStats> {
   const profile = await requireProfile();
   const supabase = await createClient();
 
-  const [galleryCountRes, photoCountRes, recentGalleriesRes, recentPhotosRes] = await Promise.all([
-    supabase.from("galleries").select("*", { count: "exact", head: true }).eq("owner_id", profile.id),
-    supabase
-      .from("photos")
-      .select("*, galleries!inner(owner_id)", { count: "exact", head: true })
-      .eq("galleries.owner_id", profile.id),
-    supabase
-      .from("galleries")
-      .select("*")
-      .eq("owner_id", profile.id)
-      .order("updated_at", { ascending: false })
-      .limit(5),
-    supabase
-      .from("photos")
-      .select("*, galleries!inner(title, owner_id)")
-      .eq("galleries.owner_id", profile.id)
-      .order("created_at", { ascending: false })
-      .limit(8),
-  ]);
+  const [galleryCountRes, photoCountRes, newLeadCountRes, recentGalleriesRes, recentPhotosRes, recentLeadsRes] =
+    await Promise.all([
+      supabase.from("galleries").select("*", { count: "exact", head: true }).eq("owner_id", profile.id),
+      supabase
+        .from("photos")
+        .select("*, galleries!inner(owner_id)", { count: "exact", head: true })
+        .eq("galleries.owner_id", profile.id),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "new"),
+      supabase
+        .from("galleries")
+        .select("*")
+        .eq("owner_id", profile.id)
+        .order("updated_at", { ascending: false })
+        .limit(5),
+      supabase
+        .from("photos")
+        .select("*, galleries!inner(title, owner_id)")
+        .eq("galleries.owner_id", profile.id)
+        .order("created_at", { ascending: false })
+        .limit(8),
+      supabase.from("leads").select("*").order("created_at", { ascending: false }).limit(5),
+    ]);
 
   if (galleryCountRes.error) throw galleryCountRes.error;
   if (photoCountRes.error) throw photoCountRes.error;
+  if (newLeadCountRes.error) throw newLeadCountRes.error;
   if (recentGalleriesRes.error) throw recentGalleriesRes.error;
   if (recentPhotosRes.error) throw recentPhotosRes.error;
+  if (recentLeadsRes.error) throw recentLeadsRes.error;
 
   const recentPhotos = (recentPhotosRes.data ?? []).map((row) => {
     const { galleries, ...photo } = row as Photo & { galleries: { title: string } };
@@ -142,7 +149,18 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   return {
     galleryCount: galleryCountRes.count ?? 0,
     photoCount: photoCountRes.count ?? 0,
+    newLeadCount: newLeadCountRes.count ?? 0,
     recentGalleries: recentGalleriesRes.data ?? [],
     recentPhotos,
+    recentLeads: recentLeadsRes.data ?? [],
   };
+}
+
+export async function listLeads(): Promise<Lead[]> {
+  await requireProfile();
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("leads").select("*").order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return data ?? [];
 }

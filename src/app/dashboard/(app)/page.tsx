@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { Images, ImagePlus, Plus, Upload } from "lucide-react";
+import { Images, ImagePlus, Inbox, Plus, Upload } from "lucide-react";
 import { getDashboardStats, requireProfile } from "@/app/dashboard/_lib/data";
 import { StatCard } from "@/app/dashboard/_components/stat-card";
 import { EmptyState } from "@/app/dashboard/_components/empty-state";
 import { GalleryCard } from "@/app/dashboard/_components/gallery-card";
+import { LeadCard } from "@/app/dashboard/_components/lead-card";
 import { Button } from "@/components/ui/button";
 
 export const metadata = { title: "Overview" };
@@ -17,9 +18,10 @@ export default async function DashboardOverviewPage() {
       <p className="label-caps mb-2">Welcome back</p>
       <h1 className="mb-10 text-3xl font-semibold tracking-tight sm:text-4xl">{firstName}</h1>
 
-      <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <StatCard label="Galleries" value={stats.galleryCount} icon={<Images className="h-8 w-8" />} />
         <StatCard label="Photos" value={stats.photoCount} icon={<ImagePlus className="h-8 w-8" />} />
+        <StatCard label="New Enquiries" value={stats.newLeadCount} icon={<Inbox className="h-8 w-8" />} />
       </div>
 
       <div className="mb-14 flex flex-col gap-3 sm:flex-row">
@@ -68,6 +70,27 @@ export default async function DashboardOverviewPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {stats.recentGalleries.map((gallery) => (
             <GalleryCard key={gallery.id} gallery={gallery} />
+          ))}
+        </div>
+      )}
+
+      <div className="mt-14 mb-6 flex items-baseline justify-between">
+        <h2 className="text-lg font-semibold uppercase tracking-tight">Recent Enquiries</h2>
+        <Link href="/dashboard/leads" className="label-caps underline underline-offset-4">
+          View all →
+        </Link>
+      </div>
+
+      {stats.recentLeads.length === 0 ? (
+        <EmptyState
+          icon={<Inbox className="h-10 w-10" />}
+          title="No enquiries yet"
+          description="Messages sent through your contact form will show up here."
+        />
+      ) : (
+        <div className="space-y-4">
+          {stats.recentLeads.map((lead) => (
+            <LeadCard key={lead.id} lead={lead} />
           ))}
         </div>
       )}
