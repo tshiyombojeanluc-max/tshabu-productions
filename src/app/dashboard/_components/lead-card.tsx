@@ -1,7 +1,7 @@
 "use client";
 
-import { useTransition } from "react";
-import { Mail, Trash2 } from "lucide-react";
+import { useState, useTransition } from "react";
+import { Check, Copy, Mail, Trash2 } from "lucide-react";
 import { setLeadStatus, deleteLead } from "@/app/dashboard/_actions/leads";
 import { ConfirmDeleteButton } from "@/app/dashboard/_components/confirm-delete-button";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -17,7 +17,19 @@ const statusStyles: Record<Lead["status"], string> = {
 
 export function LeadCard({ lead }: { lead: Lead }) {
   const [pending, startTransition] = useTransition();
+  const [copied, setCopied] = useState(false);
   const fullName = `${lead.first_name} ${lead.last_name}`.trim();
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(lead.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard access can be blocked (permissions, insecure context) —
+      // the email is still right there in the card text either way.
+    }
+  };
 
   const details = [lead.company, lead.project_type, lead.budget].filter(Boolean) as string[];
 
@@ -49,6 +61,17 @@ export function LeadCard({ lead }: { lead: Lead }) {
           <Mail className="h-3.5 w-3.5" />
           Reply
         </a>
+
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="h-auto gap-1.5 rounded-none px-3 py-1.5 text-xs"
+          onClick={copyEmail}
+        >
+          {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+          {copied ? "Copied" : "Copy Email"}
+        </Button>
 
         {lead.status !== "read" && (
           <Button
