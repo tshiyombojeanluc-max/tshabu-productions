@@ -42,6 +42,7 @@ export async function submitContactForm(_prevState: ContactFormState, formData: 
     .single();
 
   if (insertError || !lead) {
+    console.error("Lead insert failed:", insertError);
     return { error: "Something went wrong sending your message. Please try again or email us directly." };
   }
 
