@@ -15,6 +15,13 @@ type LeadNotificationInput = Pick<
 // "Tshabu Productions <hello@tshabuproductions.com>" for real deliverability.
 const FROM_ADDRESS = process.env.CONTACT_FROM_EMAIL || "Tshabu Productions <onboarding@resend.dev>";
 
+// Deliberately separate from the public contact email shown on the site
+// (site.email): Resend's sandbox mode only delivers to the address the
+// Resend account itself is signed up with, which may not be the same inbox
+// the client actually wants enquiries to land in yet. Defaults to site.email
+// so it "just works" once a verified domain lifts that restriction.
+const NOTIFICATION_EMAIL = process.env.LEAD_NOTIFICATION_EMAIL || site.email;
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -77,7 +84,7 @@ export async function sendLeadNotification(lead: LeadNotificationInput): Promise
   try {
     const { error } = await resend.emails.send({
       from: FROM_ADDRESS,
-      to: site.email,
+      to: NOTIFICATION_EMAIL,
       replyTo: lead.email,
       subject: `New enquiry from ${fullName}`,
       text: textBody,
