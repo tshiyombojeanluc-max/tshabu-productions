@@ -136,10 +136,17 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 
   if (galleryCountRes.error) throw galleryCountRes.error;
   if (photoCountRes.error) throw photoCountRes.error;
-  if (newLeadCountRes.error) throw newLeadCountRes.error;
   if (recentGalleriesRes.error) throw recentGalleriesRes.error;
   if (recentPhotosRes.error) throw recentPhotosRes.error;
-  if (recentLeadsRes.error) throw recentLeadsRes.error;
+
+  // The leads table ships in a separate migration from the rest of the
+  // schema (added after galleries/photos), so there's a real window where
+  // it hasn't been applied yet. Treat "table not found" (PostgREST code
+  // PGRST205) as "no leads yet" instead of taking down the whole overview
+  // page — every other genuine error still throws normally.
+  const isMissingLeadsTable = (error: { code?: string } | null) => error?.code === "PGRST205";
+  if (newLeadCountRes.error && !isMissingLeadsTable(newLeadCountRes.error)) throw newLeadCountRes.error;
+  if (recentLeadsRes.error && !isMissingLeadsTable(recentLeadsRes.error)) throw recentLeadsRes.error;
 
   const recentPhotos = (recentPhotosRes.data ?? []).map((row) => {
     const { galleries, ...photo } = row as Photo & { galleries: { title: string } };
@@ -149,10 +156,10 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   return {
     galleryCount: galleryCountRes.count ?? 0,
     photoCount: photoCountRes.count ?? 0,
-    newLeadCount: newLeadCountRes.count ?? 0,
+    newLeadCount: newLeadCountRes.error ? 0 : (newLeadCountRes.count ?? 0),
     recentGalleries: recentGalleriesRes.data ?? [],
     recentPhotos,
-    recentLeads: recentLeadsRes.data ?? [],
+    recentLeads: recentLeadsRes.error ? [] : (recentLeadsRes.data ?? []),
   };
 }
 
@@ -161,6 +168,7 @@ export async function listLeads(): Promise<Lead[]> {
   const supabase = await createClient();
   const { data, error } = await supabase.from("leads").select("*").order("created_at", { ascending: false });
 
-  if (error) throw error;
+  // See getDashboardStats for why a missing leads table isn't a hard error.
+  if (error && error.code !== "PGRST205") throw error;
   return data ?? [];
 }
