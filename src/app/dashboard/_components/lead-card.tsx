@@ -4,7 +4,7 @@ import { useTransition } from "react";
 import { Mail, Trash2 } from "lucide-react";
 import { setLeadStatus, deleteLead } from "@/app/dashboard/_actions/leads";
 import { ConfirmDeleteButton } from "@/app/dashboard/_components/confirm-delete-button";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { site } from "@/lib/data";
 import type { Lead } from "@/lib/supabase/types";
@@ -42,16 +42,13 @@ export function LeadCard({ lead }: { lead: Lead }) {
       <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">{lead.message}</p>
 
       <div className="mt-5 flex flex-wrap items-center gap-2">
-        <Button
-          render={<a href={`mailto:${lead.email}?subject=${encodeURIComponent(`Re: your enquiry to ${site.name}`)}`} />}
-          nativeButton={false}
-          variant="outline"
-          size="sm"
-          className="h-auto gap-1.5 rounded-none px-3 py-1.5 text-xs"
+        <a
+          href={`mailto:${encodeURIComponent(lead.email)}?subject=${encodeURIComponent(`Re: your enquiry to ${site.name}`)}`}
+          className={cn(buttonVariants({ variant: "outline", size: "sm" }), "h-auto gap-1.5 rounded-none px-3 py-1.5 text-xs")}
         >
           <Mail className="h-3.5 w-3.5" />
           Reply
-        </Button>
+        </a>
 
         {lead.status !== "read" && (
           <Button
