@@ -4,6 +4,11 @@ import { Resend } from "resend";
 import { site } from "@/lib/data";
 import type { Lead } from "@/lib/supabase/types";
 
+type LeadNotificationInput = Pick<
+  Lead,
+  "first_name" | "last_name" | "email" | "company" | "project_type" | "budget" | "message"
+>;
+
 // Falls back to Resend's shared sandbox sender so email works out of the
 // box before a custom domain is verified in Resend. Once you verify your
 // own domain there, set CONTACT_FROM_EMAIL to something like
@@ -22,8 +27,13 @@ function escapeHtml(value: string): string {
  * Best-effort notification email — never throws. The lead is already saved
  * to the database by the time this runs, so a misconfigured or down email
  * provider should never make lead capture itself appear to fail.
+ *
+ * Takes the submitted fields directly rather than the row Postgres just
+ * inserted: RLS deliberately never lets an anonymous submitter read leads
+ * back (INSERT ... RETURNING requires SELECT-policy visibility too, which
+ * anon doesn't have), so there's no DB round-trip result to reuse here.
  */
-export async function sendLeadNotification(lead: Lead): Promise<{ sent: boolean; error?: string }> {
+export async function sendLeadNotification(lead: LeadNotificationInput): Promise<{ sent: boolean; error?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     return { sent: false, error: "RESEND_API_KEY is not configured." };
