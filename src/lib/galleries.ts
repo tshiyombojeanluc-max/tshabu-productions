@@ -31,6 +31,7 @@ function toProject(gallery: Gallery, photos: Photo[]): Project {
     gallery: sortedPhotos.map((p) => ({ src: p.image_url, width: p.width, height: p.height })),
     credits: [{ role: "Photography", name: "Tshabu Productions" }],
     featured: gallery.featured,
+    updatedAt: gallery.updated_at,
   };
 }
 

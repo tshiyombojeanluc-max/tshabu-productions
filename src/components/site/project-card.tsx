@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import type { Project } from "@/lib/data";
+import { joinLabel, type Project } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
 const aspectClass: Record<Project["coverAspect"], string> = {
@@ -33,7 +33,7 @@ export function ProjectCard({
       <div className={cn("relative w-full overflow-hidden bg-tshabu-charcoal", aspectClass[project.coverAspect])}>
         <Image
           src={project.coverImage}
-          alt={`${project.name} — ${project.category}`}
+          alt={joinLabel(project.name, project.category)}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
           priority={priority}
@@ -53,9 +53,9 @@ export function ProjectCard({
         <h3 className="text-lg font-medium uppercase tracking-tight transition-transform duration-500 group-hover:translate-x-1 sm:text-xl">
           {project.name}
         </h3>
-        <span className="label-caps whitespace-nowrap text-tshabu-graphite">{project.year}</span>
+        {project.year && <span className="label-caps whitespace-nowrap text-tshabu-graphite">{project.year}</span>}
       </div>
-      <p className="label-caps mt-1 text-tshabu-graphite">{project.category}</p>
+      {project.category && <p className="label-caps mt-1 text-tshabu-graphite">{project.category}</p>}
     </Link>
   );
 }

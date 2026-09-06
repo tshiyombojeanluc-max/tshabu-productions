@@ -37,7 +37,19 @@ export type Project = {
   gallery: { src: string; width: number; height: number }[];
   credits: { role: string; name: string }[];
   featured: boolean;
+  /** ISO timestamp of the gallery's last edit — used for sitemap.xml. */
+  updatedAt: string;
 };
+
+/**
+ * Category/year/client are optional on a dashboard-created gallery (unlike
+ * the original 5 seeded projects, which always had them), so anything
+ * joining them with " — " needs to skip the pieces that are missing rather
+ * than rendering a dangling separator.
+ */
+export function joinLabel(...parts: (string | null | undefined)[]): string {
+  return parts.filter((part): part is string => Boolean(part)).join(" — ");
+}
 
 export type Service = {
   id: string;

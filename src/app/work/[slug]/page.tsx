@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { Reveal, ImageReveal } from "@/components/site/reveal";
 import { JsonLd } from "@/components/site/json-ld";
 import { getAdjacentProjects, getProjectBySlug } from "@/lib/galleries";
+import { joinLabel } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { buildMetadata, breadcrumbJsonLd, absoluteUrl } from "@/lib/seo";
 
@@ -42,9 +43,12 @@ export default async function ProjectPage({
     description: project.description,
     url: absoluteUrl(`/work/${project.slug}`),
     image: project.gallery.map((photo) => absoluteUrl(photo.src)),
-    datePublished: project.year,
+    // Omitted entirely rather than sent as "" when unset — an empty string
+    // is invalid for these properties and can trip structured-data
+    // validators, whereas a missing optional property is simply ignored.
+    ...(project.year ? { datePublished: project.year } : {}),
     creator: { "@id": `${absoluteUrl("/")}#organization` },
-    about: project.category,
+    ...(project.category ? { about: project.category } : {}),
     locationCreated: {
       "@type": "Place",
       name: "Cape Town, South Africa",
@@ -64,7 +68,7 @@ export default async function ProjectPage({
       <section className="relative flex h-[100svh] w-full items-end overflow-hidden bg-tshabu-black">
         <Image
           src={project.coverImage}
-          alt={`${project.name} — ${project.category}`}
+          alt={joinLabel(project.name, project.category)}
           fill
           priority
           sizes="100vw"
@@ -72,9 +76,9 @@ export default async function ProjectPage({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/20" />
         <div className="container-edit relative z-10 flex w-full flex-col gap-6 pb-16 pt-40">
-          <p className="label-caps text-tshabu-paper/70">
-            {project.category} — {project.year}
-          </p>
+          {(project.category || project.year) && (
+            <p className="label-caps text-tshabu-paper/70">{joinLabel(project.category, project.year)}</p>
+          )}
           <h1 className="text-5xl font-bold uppercase leading-[0.95] tracking-tight text-tshabu-paper sm:text-7xl md:text-8xl">
             {project.name}
           </h1>
@@ -84,18 +88,24 @@ export default async function ProjectPage({
       <section className="container-edit grid grid-cols-1 gap-12 py-20 md:grid-cols-12 md:py-28">
         <Reveal className="md:col-span-4">
           <dl className="space-y-8">
-            <div>
-              <dt className="label-caps mb-2 text-tshabu-graphite">Client</dt>
-              <dd className="text-lg">{project.client}</dd>
-            </div>
-            <div>
-              <dt className="label-caps mb-2 text-tshabu-graphite">Category</dt>
-              <dd className="text-lg">{project.category}</dd>
-            </div>
-            <div>
-              <dt className="label-caps mb-2 text-tshabu-graphite">Year</dt>
-              <dd className="text-lg">{project.year}</dd>
-            </div>
+            {project.client && (
+              <div>
+                <dt className="label-caps mb-2 text-tshabu-graphite">Client</dt>
+                <dd className="text-lg">{project.client}</dd>
+              </div>
+            )}
+            {project.category && (
+              <div>
+                <dt className="label-caps mb-2 text-tshabu-graphite">Category</dt>
+                <dd className="text-lg">{project.category}</dd>
+              </div>
+            )}
+            {project.year && (
+              <div>
+                <dt className="label-caps mb-2 text-tshabu-graphite">Year</dt>
+                <dd className="text-lg">{project.year}</dd>
+              </div>
+            )}
           </dl>
         </Reveal>
         <Reveal delay={0.1} className="md:col-span-8">

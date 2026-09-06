@@ -7,7 +7,22 @@ export type ContactFormState = { error: string } | { success: true } | null;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Below this, a submission is almost certainly an automated script filling
+// the form the instant it loads rather than a person reading it first.
+const MIN_HUMAN_SUBMIT_MS = 1500;
+
 export async function submitContactForm(_prevState: ContactFormState, formData: FormData): Promise<ContactFormState> {
+  // Honeypot: a real visitor never sees or fills this field. Return a fake
+  // success rather than an error, so a bot gets no signal to adapt to.
+  if (String(formData.get("website") ?? "").trim()) {
+    return { success: true };
+  }
+
+  const renderedAt = Number(formData.get("renderedAt"));
+  if (Number.isFinite(renderedAt) && Date.now() - renderedAt < MIN_HUMAN_SUBMIT_MS) {
+    return { success: true };
+  }
+
   const firstName = String(formData.get("firstName") ?? "").trim();
   const lastName = String(formData.get("lastName") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();

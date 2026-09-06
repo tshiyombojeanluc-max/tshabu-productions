@@ -6,7 +6,7 @@ import { SectionHeading } from "@/components/site/section-heading";
 import { ProjectGrid } from "@/components/site/project-grid";
 import ScrollAdventure, { type ScrollAdventurePage } from "@/components/ui/animated-scroll";
 import type { StreamImage } from "@/components/ui/image-stream-hero";
-import { navLinks, services, site } from "@/lib/data";
+import { joinLabel, navLinks, services, site } from "@/lib/data";
 import { getFeaturedProjects } from "@/lib/galleries";
 import { buildMetadata } from "@/lib/seo";
 
@@ -35,20 +35,20 @@ export const metadata = buildMetadata({
 function buildShowreelPages(projects: Awaited<ReturnType<typeof getFeaturedProjects>>): ScrollAdventurePage[] {
   return projects.slice(0, 4).map((project, i) => {
     const content = {
-      heading: `${project.category} — ${project.year}`,
+      heading: joinLabel(project.category, project.year),
       description: project.name,
     };
     return i % 2 === 0
       ? {
           leftBgImage: null,
           rightBgImage: project.coverImage,
-          rightImageAlt: `${project.name} — ${project.category}`,
+          rightImageAlt: joinLabel(project.name, project.category),
           leftContent: content,
           rightContent: null,
         }
       : {
           leftBgImage: project.coverImage,
-          leftImageAlt: `${project.name} — ${project.category}`,
+          leftImageAlt: joinLabel(project.name, project.category),
           rightBgImage: null,
           leftContent: null,
           rightContent: content,

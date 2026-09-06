@@ -25,6 +25,7 @@ export function ContactForm() {
   const [state, formAction, pending] = useActionState<ContactFormState, FormData>(submitContactForm, null);
   const [projectType, setProjectType] = useState<string | null>(null);
   const [budget, setBudget] = useState<string | null>(null);
+  const [renderedAt] = useState(() => Date.now());
 
   if (state && "success" in state) {
     return (
@@ -46,6 +47,15 @@ export function ContactForm() {
 
   return (
     <form action={formAction} className="space-y-10">
+      {/* Honeypot: invisible to a real visitor, but a generic form-filling
+          bot will often populate any field it can find. A filled value
+          here silently short-circuits submission server-side. */}
+      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+        <label htmlFor="website">Leave this field blank</label>
+        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+      <input type="hidden" name="renderedAt" value={renderedAt} />
+
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="firstName" className="label-caps">First name</Label>

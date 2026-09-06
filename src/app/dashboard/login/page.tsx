@@ -4,7 +4,9 @@ import { site } from "@/lib/data";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {
-  title: `Client Login — ${site.name}`,
+  // No need to append the site name here — the root layout's title
+  // template ("%s — Tshabu Productions") already does that once.
+  title: "Client Login",
   robots: { index: false, follow: false },
 };
 
