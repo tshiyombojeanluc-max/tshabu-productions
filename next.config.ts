@@ -15,6 +15,27 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      // The old Vercel-assigned URL still resolves (Vercel keeps it as an
+      // alias) — redirect it to the real domain so visitors, old links, and
+      // search engines converge on one canonical host instead of splitting
+      // signals across two working URLs for the same content.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "tshabu-productions.vercel.app" }],
+        destination: "https://tshabuproductions.co.za/:path*",
+        permanent: true,
+      },
+      // Same reasoning for www — one canonical host (the bare apex domain).
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.tshabuproductions.co.za" }],
+        destination: "https://tshabuproductions.co.za/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

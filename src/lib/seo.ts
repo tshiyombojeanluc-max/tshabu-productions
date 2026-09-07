@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 /**
- * The site's real, live, working domain. `tshabuproductions.com` (used
- * previously throughout metadata) is unregistered and resolves to nothing —
- * every canonical/OG URL was pointing at a dead domain. Update this the day
- * a real custom domain goes live, and add a redirect from this URL to it.
+ * The site's real, live, working domain. The old tshabu-productions.vercel.app
+ * URL still resolves (Vercel keeps it as an alias), so next.config.ts
+ * permanently redirects it here to avoid splitting SEO signals/duplicate
+ * content between the two.
  */
-export const SITE_URL = "https://tshabu-productions.vercel.app";
+export const SITE_URL = "https://tshabuproductions.co.za";
 
 export const DEFAULT_OG_IMAGE =
   "/images/projects/myles-munroe-foundation/myles-munroe-foundation-1.jpg";
