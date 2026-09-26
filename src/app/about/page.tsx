@@ -1,11 +1,18 @@
 import { Globe, ImageIcon, Video } from "lucide-react";
 import { MinimalistHero } from "@/components/ui/minimalist-hero";
 import { BehindTheScenesGallery } from "@/components/site/behind-the-scenes-gallery";
+import { behindTheScenesDefaults } from "@/lib/behind-the-scenes-defaults";
 import { Reveal, ImageReveal } from "@/components/site/reveal";
 import { SectionHeading } from "@/components/site/section-heading";
 import { JsonLd } from "@/components/site/json-ld";
 import { approachSteps, navLinks, site } from "@/lib/data";
+import { getSiteImageOverrides } from "@/lib/site-images";
+import { resolveSiteImage } from "@/lib/site-image-slots";
 import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
+
+// See src/app/page.tsx for why this is safe: no Request-time APIs run in
+// this tree, so the page can be ISR'd instead of forced fully-dynamic.
+export const revalidate = 3600;
 
 export const metadata = buildMetadata({
   title: "About",
@@ -14,7 +21,16 @@ export const metadata = buildMetadata({
   path: "/about",
 });
 
-export default function AboutPage() {
+const btsKeys = ["bts_1", "bts_2", "bts_3", "bts_4", "bts_5", "bts_6"];
+
+export default async function AboutPage() {
+  const imageOverrides = await getSiteImageOverrides();
+  const aboutHeroSrc = resolveSiteImage(imageOverrides, "about_hero");
+  const behindTheScenesItems = behindTheScenesDefaults.map((item, i) => ({
+    ...item,
+    src: resolveSiteImage(imageOverrides, btsKeys[i]),
+  }));
+
   return (
     <>
       <JsonLd
@@ -28,7 +44,7 @@ export default function AboutPage() {
         logoText={site.shortName}
         navLinks={navLinks}
         mainText="Tshabu Productions is a Cape Town photography and videography studio. We partner with businesses, schools and individuals to build visual stories shaped by discipline, patience and a clear point of view."
-        imageSrc="/images/projects/one-year-birthday/one-year-birthday-4.jpg"
+        imageSrc={aboutHeroSrc}
         imageAlt="A toddler at her first birthday cake smash photoshoot"
         imageFocalPoint="50% 25%"
         overlayText={{ part1: "We capture.", part2: "We create." }}
@@ -67,7 +83,7 @@ export default function AboutPage() {
       <section className="container-edit py-28 md:py-40">
         <SectionHeading label="Behind the Scenes" title="On Set" className="mb-16" />
         <ImageReveal>
-          <BehindTheScenesGallery />
+          <BehindTheScenesGallery items={behindTheScenesItems} />
         </ImageReveal>
       </section>
     </>

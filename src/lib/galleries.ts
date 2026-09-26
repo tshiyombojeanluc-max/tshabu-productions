@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import type { Gallery, Photo } from "@/lib/supabase/types";
 import type { Project } from "@/lib/data";
 
@@ -37,7 +37,7 @@ function toProject(gallery: Gallery, photos: Photo[]): Project {
 
 /** All published galleries, newest first. Cached per-request. */
 export const getPublishedProjects = cache(async (): Promise<Project[]> => {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("galleries")
     .select("*, photos(*)")

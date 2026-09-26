@@ -4,10 +4,22 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Reveal, ImageReveal } from "@/components/site/reveal";
 import { JsonLd } from "@/components/site/json-ld";
-import { getAdjacentProjects, getProjectBySlug } from "@/lib/galleries";
+import { getAdjacentProjects, getProjectBySlug, getPublishedProjects } from "@/lib/galleries";
 import { joinLabel } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { buildMetadata, breadcrumbJsonLd, absoluteUrl } from "@/lib/seo";
+
+// See src/app/work/page.tsx — same cookie-free data layer, same ISR win.
+// Without generateStaticParams, Next has no path list to pre-render and
+// falls back to fully dynamic SSR on every request regardless of
+// `revalidate` — providing every published slug up front is what actually
+// turns each project page into a static, ISR'd route.
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const projects = await getPublishedProjects();
+  return projects.map((project) => ({ slug: project.slug }));
+}
 
 export async function generateMetadata({
   params,

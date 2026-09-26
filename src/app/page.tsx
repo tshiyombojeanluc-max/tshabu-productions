@@ -8,22 +8,31 @@ import ScrollAdventure, { type ScrollAdventurePage } from "@/components/ui/anima
 import type { StreamImage } from "@/components/ui/image-stream-hero";
 import { joinLabel, navLinks, services, site } from "@/lib/data";
 import { getFeaturedProjects } from "@/lib/galleries";
+import { getSiteImageOverrides } from "@/lib/site-images";
+import { resolveSiteImage } from "@/lib/site-image-slots";
 import { buildMetadata } from "@/lib/seo";
 
-// A curated spread of real client photos across all 5 projects, cycled
-// through the hero's animated corridor.
-const heroStreamImages: StreamImage[] = [
-  { src: "/images/projects/yit-gala/yit-gala-1.jpg", alt: "Guests at the YIT Gala dinner table" },
-  { src: "/images/projects/one-year-birthday/one-year-birthday-4.jpg", alt: "A toddler at her first birthday cake smash" },
-  { src: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-1.jpg", alt: "A speaker at the Myles Munroe Foundation event" },
-  { src: "/images/projects/jazz-and-wine/jazz-and-wine-2.jpg", alt: "Guests at the Jazz & Wine event" },
-  { src: "/images/projects/50th-birthday/50th-birthday-3.jpg", alt: "Guests at a 50th birthday celebration" },
-  { src: "/images/projects/yit-gala/yit-gala-6.jpg", alt: "A guest laughing at the YIT Gala" },
-  { src: "/images/projects/jazz-and-wine/jazz-and-wine-6.jpg", alt: "A musician performing at Jazz & Wine" },
-  { src: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-3.jpg", alt: "A speaker at the Myles Munroe Foundation event" },
-  { src: "/images/projects/one-year-birthday/one-year-birthday-1.jpg", alt: "A first birthday photoshoot" },
-  { src: "/images/projects/50th-birthday/50th-birthday-1.jpg", alt: "A 50th birthday celebration" },
+// Falls back to a curated spread of real client photos across all 5
+// projects — replaceable per-slot from Dashboard → Site Images (see
+// lib/site-image-slots.ts) — cycled through the hero's animated corridor.
+const heroStreamDefaults: (StreamImage & { key: string })[] = [
+  { key: "home_stream_1", src: "/images/projects/yit-gala/yit-gala-1.jpg", alt: "Guests at the YIT Gala dinner table" },
+  { key: "home_stream_2", src: "/images/projects/one-year-birthday/one-year-birthday-4.jpg", alt: "A toddler at her first birthday cake smash" },
+  { key: "home_stream_3", src: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-1.jpg", alt: "A speaker at the Myles Munroe Foundation event" },
+  { key: "home_stream_4", src: "/images/projects/jazz-and-wine/jazz-and-wine-2.jpg", alt: "Guests at the Jazz & Wine event" },
+  { key: "home_stream_5", src: "/images/projects/50th-birthday/50th-birthday-3.jpg", alt: "Guests at a 50th birthday celebration" },
+  { key: "home_stream_6", src: "/images/projects/yit-gala/yit-gala-6.jpg", alt: "A guest laughing at the YIT Gala" },
+  { key: "home_stream_7", src: "/images/projects/jazz-and-wine/jazz-and-wine-6.jpg", alt: "A musician performing at Jazz & Wine" },
+  { key: "home_stream_8", src: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-3.jpg", alt: "A speaker at the Myles Munroe Foundation event" },
+  { key: "home_stream_9", src: "/images/projects/one-year-birthday/one-year-birthday-1.jpg", alt: "A first birthday photoshoot" },
+  { key: "home_stream_10", src: "/images/projects/50th-birthday/50th-birthday-1.jpg", alt: "A 50th birthday celebration" },
 ];
+
+// No Request-time APIs (cookies/headers) run in this tree — getFeaturedProjects
+// and getSiteImageOverrides both go through the cookie-free public Supabase
+// client — so this page can be statically rendered and revalidated hourly
+// instead of forced fully-dynamic on every request.
+export const revalidate = 3600;
 
 export const metadata = buildMetadata({
   title: "Tshabu Productions — Photography & Videography in Cape Town",
@@ -57,8 +66,14 @@ function buildShowreelPages(projects: Awaited<ReturnType<typeof getFeaturedProje
 }
 
 export default async function HomePage() {
-  const featuredProjects = await getFeaturedProjects();
+  const [featuredProjects, imageOverrides] = await Promise.all([getFeaturedProjects(), getSiteImageOverrides()]);
   const showreelPages = buildShowreelPages(featuredProjects);
+  const heroStreamImages: StreamImage[] = heroStreamDefaults.map(({ key, alt }) => ({
+    src: resolveSiteImage(imageOverrides, key),
+    alt,
+  }));
+  const mobileHeroMedia = resolveSiteImage(imageOverrides, "home_hero_media");
+  const mobileHeroBackground = resolveSiteImage(imageOverrides, "home_hero_background");
 
   return (
     <>
@@ -95,8 +110,8 @@ export default async function HomePage() {
       <div className="md:hidden">
         <ScrollExpandMedia
           mediaType="image"
-          mediaSrc="/images/hero/camera-artistic.jpg"
-          bgImageSrc="/images/hero/lens-dark.jpg"
+          mediaSrc={mobileHeroMedia}
+          bgImageSrc={mobileHeroBackground}
           title="Tshabu Productions"
           date={site.location}
           scrollToExpand="Photography · Videography · Storytelling"

@@ -8,7 +8,7 @@ import { Menu, X } from "lucide-react";
 import { navLinks, site } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
-export default function Navbar() {
+export default function Navbar({ logoSrc = "/images/logo.png" }: { logoSrc?: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -59,7 +59,7 @@ export default function Navbar() {
         <div className="container-edit flex items-center py-6">
           <Link href="/" onClick={() => setOpen(false)} className="pointer-events-auto">
             <Image
-              src="/images/logo.png"
+              src={logoSrc}
               alt={site.name}
               width={40}
               height={40}

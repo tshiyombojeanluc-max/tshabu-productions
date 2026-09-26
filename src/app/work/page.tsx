@@ -4,6 +4,12 @@ import { JsonLd } from "@/components/site/json-ld";
 import { getPublishedProjects } from "@/lib/galleries";
 import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 
+// getPublishedProjects goes through the cookie-free public Supabase client,
+// so (like the homepage) this can be ISR'd instead of forced fully-dynamic.
+// Dashboard actions already call revalidatePath("/work") on publish, so a
+// new gallery shows up immediately rather than waiting out this window.
+export const revalidate = 3600;
+
 export const metadata = buildMetadata({
   title: "Work",
   description:

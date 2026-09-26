@@ -139,6 +139,30 @@ export type Database = {
         };
         Relationships: [];
       };
+      site_images: {
+        Row: {
+          key: string;
+          url: string;
+          storage_path: string;
+          width: number | null;
+          height: number | null;
+          updated_at: string;
+        };
+        Insert: {
+          key: string;
+          url: string;
+          storage_path: string;
+          width?: number | null;
+          height?: number | null;
+        };
+        Update: {
+          url?: string;
+          storage_path?: string;
+          width?: number | null;
+          height?: number | null;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -151,3 +175,4 @@ export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type Gallery = Database["public"]["Tables"]["galleries"]["Row"];
 export type Photo = Database["public"]["Tables"]["photos"]["Row"];
 export type Lead = Database["public"]["Tables"]["leads"]["Row"];
+export type SiteImage = Database["public"]["Tables"]["site_images"]["Row"];

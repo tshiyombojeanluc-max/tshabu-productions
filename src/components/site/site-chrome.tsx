@@ -9,13 +9,13 @@ import Footer from "@/components/site/footer";
  * and shouldn't also get the public site's Navbar/Footer — this is the only
  * place that decision is made, so no existing route file has to change.
  */
-export function SiteChrome({ children }: { children: React.ReactNode }) {
+export function SiteChrome({ children, logoSrc }: { children: React.ReactNode; logoSrc?: string }) {
   const pathname = usePathname();
   const isDashboard = pathname?.startsWith("/dashboard");
 
   return (
     <>
-      {!isDashboard && <Navbar />}
+      {!isDashboard && <Navbar logoSrc={logoSrc} />}
       <main>{children}</main>
       {!isDashboard && <Footer />}
     </>

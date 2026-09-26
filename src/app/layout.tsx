@@ -4,6 +4,8 @@ import { SiteChrome } from "@/components/site/site-chrome";
 import { JsonLd } from "@/components/site/json-ld";
 import { SITE_URL, DEFAULT_OG_IMAGE, absoluteUrl } from "@/lib/seo";
 import { site, socialLinks } from "@/lib/data";
+import { getSiteImageOverrides } from "@/lib/site-images";
+import { resolveSiteImage } from "@/lib/site-image-slots";
 import "./globals.css";
 
 // Inter ships as a variable font — loading it without a `weight` array
@@ -64,13 +66,16 @@ export const metadata: Metadata = {
   },
 };
 
-const organizationJsonLd = {
+// `logoSrc` defaults to the shipped file but is a param so both call sites
+// (this JSON-LD and the rendered <Navbar>) reflect whatever the client has
+// uploaded from Dashboard → Site Images (see lib/site-image-slots.ts).
+const buildOrganizationJsonLd = (logoSrc: string) => ({
   "@context": "https://schema.org",
   "@type": ["Organization", "LocalBusiness"],
   "@id": `${SITE_URL}/#organization`,
   name: site.name,
   url: SITE_URL,
-  logo: absoluteUrl("/images/logo.png"),
+  logo: absoluteUrl(logoSrc),
   image: absoluteUrl(DEFAULT_OG_IMAGE),
   email: site.email,
   telephone: site.phone,
@@ -87,7 +92,7 @@ const organizationJsonLd = {
     name: "Cape Town",
   },
   sameAs: socialLinks.map((link) => link.href),
-};
+});
 
 const websiteJsonLd = {
   "@context": "https://schema.org",
@@ -98,7 +103,10 @@ const websiteJsonLd = {
   publisher: { "@id": `${SITE_URL}/#organization` },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const imageOverrides = await getSiteImageOverrides();
+  const logoSrc = resolveSiteImage(imageOverrides, "logo");
+
   return (
     <html lang="en-ZA" className={`${inter.variable} ${kaushanScript.variable} antialiased`}>
       <body className="min-h-screen bg-background text-foreground selection:bg-tshabu-black selection:text-tshabu-paper">
@@ -116,9 +124,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <noscript>
           <style>{`* { opacity: 1 !important; transform: none !important; clip-path: none !important; }`}</style>
         </noscript>
-        <JsonLd data={organizationJsonLd} />
+        <JsonLd data={buildOrganizationJsonLd(logoSrc)} />
         <JsonLd data={websiteJsonLd} />
-        <SiteChrome>{children}</SiteChrome>
+        <SiteChrome logoSrc={logoSrc}>{children}</SiteChrome>
       </body>
     </html>
   );
