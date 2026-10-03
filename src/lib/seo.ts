@@ -8,8 +8,7 @@ import type { Metadata } from "next";
  */
 export const SITE_URL = "https://tshabuproductions.co.za";
 
-export const DEFAULT_OG_IMAGE =
-  "/images/projects/myles-munroe-foundation/myles-munroe-foundation-1.jpg";
+export const DEFAULT_OG_IMAGE = "/images/logo.png";
 
 export const absoluteUrl = (path: string) => new URL(path, SITE_URL).toString();
 

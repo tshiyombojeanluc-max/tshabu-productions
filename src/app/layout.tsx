@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     siteName: "Tshabu Productions",
     type: "website",
     locale: "en_ZA",
-    images: [{ url: DEFAULT_OG_IMAGE, width: 1600, height: 1066 }],
+    images: [{ url: DEFAULT_OG_IMAGE, width: 839, height: 835 }],
   },
   twitter: {
     card: "summary_large_image",
