@@ -13,13 +13,13 @@ export default async function UploadPage() {
 
   return (
     <div>
-      <PageHeader title="Upload Photos" description="Choose a gallery, then drag in your photos." />
+      <PageHeader title="Upload" description="Choose a gallery, then drag in your photos or videos." />
 
       {galleries.length === 0 ? (
         <EmptyState
           icon={<Images className="h-10 w-10" />}
           title="Create a gallery first"
-          description="You need at least one gallery before you can upload photos."
+          description="You need at least one gallery before you can upload photos or videos."
           action={
             <Button
               render={<Link href="/dashboard/galleries/new" />}

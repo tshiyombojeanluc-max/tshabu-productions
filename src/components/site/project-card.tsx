@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { Play } from "lucide-react";
 import { joinLabel, type Project } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -48,6 +49,11 @@ export function ProjectCard({
             hovered && "bg-black/20"
           )}
         />
+        {project.videos.length > 0 && (
+          <div className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-tshabu-paper">
+            <Play className="h-3.5 w-3.5 fill-current" />
+          </div>
+        )}
       </div>
       <div className="mt-4 flex items-baseline justify-between gap-4">
         <h3 className="text-lg font-medium uppercase tracking-tight transition-transform duration-500 group-hover:translate-x-1 sm:text-xl">

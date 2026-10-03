@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { createPublicClient } from "@/lib/supabase/public";
-import type { Gallery, Photo } from "@/lib/supabase/types";
+import type { Gallery, Photo, Video } from "@/lib/supabase/types";
 import type { Project } from "@/lib/data";
 
 /**
@@ -17,8 +17,9 @@ function coverAspect(width: number | null, height: number | null): Project["cove
   return "square";
 }
 
-function toProject(gallery: Gallery, photos: Photo[]): Project {
+function toProject(gallery: Gallery, photos: Photo[], videos: Video[]): Project {
   const sortedPhotos = [...photos].sort((a, b) => a.display_order - b.display_order);
+  const sortedVideos = [...videos].sort((a, b) => a.display_order - b.display_order);
   return {
     slug: gallery.slug,
     name: gallery.title,
@@ -29,6 +30,7 @@ function toProject(gallery: Gallery, photos: Photo[]): Project {
     coverImage: gallery.cover_image ?? sortedPhotos[0]?.image_url ?? "",
     coverAspect: coverAspect(gallery.cover_width, gallery.cover_height),
     gallery: sortedPhotos.map((p) => ({ src: p.image_url, width: p.width, height: p.height })),
+    videos: sortedVideos.map((v) => ({ src: v.video_url, width: v.width, height: v.height })),
     credits: [{ role: "Photography", name: "Tshabu Productions" }],
     featured: gallery.featured,
     updatedAt: gallery.updated_at,
@@ -40,15 +42,15 @@ export const getPublishedProjects = cache(async (): Promise<Project[]> => {
   const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("galleries")
-    .select("*, photos(*)")
+    .select("*, photos(*), videos(*)")
     .eq("published", true)
     .order("created_at", { ascending: false });
 
   if (error || !data) return [];
 
   return data.map((row) => {
-    const { photos, ...gallery } = row as Gallery & { photos: Photo[] };
-    return toProject(gallery, photos);
+    const { photos, videos, ...gallery } = row as Gallery & { photos: Photo[]; videos: Video[] };
+    return toProject(gallery, photos, videos);
   });
 });
 

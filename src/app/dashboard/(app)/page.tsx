@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Images, ImagePlus, Inbox, Plus, Upload } from "lucide-react";
+import { Images, ImagePlus, Film, Inbox, Plus, Upload } from "lucide-react";
 import { getDashboardStats, requireProfile } from "@/app/dashboard/_lib/data";
 import { StatCard } from "@/app/dashboard/_components/stat-card";
 import { EmptyState } from "@/app/dashboard/_components/empty-state";
@@ -18,9 +18,10 @@ export default async function DashboardOverviewPage() {
       <p className="label-caps mb-2">Welcome back</p>
       <h1 className="mb-10 text-3xl font-semibold tracking-tight sm:text-4xl">{firstName}</h1>
 
-      <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Galleries" value={stats.galleryCount} icon={<Images className="h-8 w-8" />} />
         <StatCard label="Photos" value={stats.photoCount} icon={<ImagePlus className="h-8 w-8" />} />
+        <StatCard label="Videos" value={stats.videoCount} icon={<Film className="h-8 w-8" />} />
         <StatCard label="New Enquiries" value={stats.newLeadCount} icon={<Inbox className="h-8 w-8" />} />
       </div>
 

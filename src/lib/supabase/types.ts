@@ -111,6 +111,40 @@ export type Database = {
         };
         Relationships: [];
       };
+      videos: {
+        Row: {
+          id: string;
+          gallery_id: string;
+          storage_path: string;
+          video_url: string;
+          width: number;
+          height: number;
+          duration_seconds: number;
+          title: string | null;
+          description: string | null;
+          display_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          gallery_id: string;
+          storage_path: string;
+          video_url: string;
+          width: number;
+          height: number;
+          duration_seconds: number;
+          title?: string | null;
+          description?: string | null;
+          display_order?: number;
+        };
+        Update: {
+          gallery_id?: string;
+          title?: string | null;
+          description?: string | null;
+          display_order?: number;
+        };
+        Relationships: [];
+      };
       leads: {
         Row: {
           id: string;
@@ -174,5 +208,6 @@ export type Database = {
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type Gallery = Database["public"]["Tables"]["galleries"]["Row"];
 export type Photo = Database["public"]["Tables"]["photos"]["Row"];
+export type Video = Database["public"]["Tables"]["videos"]["Row"];
 export type Lead = Database["public"]["Tables"]["leads"]["Row"];
 export type SiteImage = Database["public"]["Tables"]["site_images"]["Row"];

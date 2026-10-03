@@ -3,7 +3,7 @@ import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import type { Gallery, Lead, Photo, Profile } from "@/lib/supabase/types";
+import type { Gallery, Lead, Photo, Profile, Video } from "@/lib/supabase/types";
 
 /**
  * Resolves the signed-in user's profile. proxy.ts already redirects
@@ -55,7 +55,9 @@ export async function listGalleries(): Promise<Gallery[]> {
   return data ?? [];
 }
 
-export async function getGalleryWithPhotos(id: string): Promise<{ gallery: Gallery; photos: Photo[] } | null> {
+export async function getGalleryWithPhotos(
+  id: string
+): Promise<{ gallery: Gallery; photos: Photo[]; videos: Video[] } | null> {
   const profile = await requireProfile();
   const supabase = await createClient();
 
@@ -68,15 +70,15 @@ export async function getGalleryWithPhotos(id: string): Promise<{ gallery: Galle
 
   if (galleryError || !gallery) return null;
 
-  const { data: photos, error: photosError } = await supabase
-    .from("photos")
-    .select("*")
-    .eq("gallery_id", id)
-    .order("display_order", { ascending: true });
+  const [{ data: photos, error: photosError }, { data: videos, error: videosError }] = await Promise.all([
+    supabase.from("photos").select("*").eq("gallery_id", id).order("display_order", { ascending: true }),
+    supabase.from("videos").select("*").eq("gallery_id", id).order("display_order", { ascending: true }),
+  ]);
 
   if (photosError) throw photosError;
+  if (videosError) throw videosError;
 
-  return { gallery, photos: photos ?? [] };
+  return { gallery, photos: photos ?? [], videos: videos ?? [] };
 }
 
 export type PhotoWithGallery = Photo & { gallery_title: string };
@@ -98,9 +100,29 @@ export async function listAllPhotos(): Promise<PhotoWithGallery[]> {
   });
 }
 
+export type VideoWithGallery = Video & { gallery_title: string };
+
+export async function listAllVideos(): Promise<VideoWithGallery[]> {
+  const profile = await requireProfile();
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("videos")
+    .select("*, galleries!inner(title, owner_id)")
+    .eq("galleries.owner_id", profile.id)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  return (data ?? []).map((row) => {
+    const { galleries, ...video } = row as Video & { galleries: { title: string } };
+    return { ...video, gallery_title: galleries.title };
+  });
+}
+
 export type DashboardStats = {
   galleryCount: number;
   photoCount: number;
+  videoCount: number;
   newLeadCount: number;
   recentGalleries: Gallery[];
   recentPhotos: PhotoWithGallery[];
@@ -111,31 +133,43 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const profile = await requireProfile();
   const supabase = await createClient();
 
-  const [galleryCountRes, photoCountRes, newLeadCountRes, recentGalleriesRes, recentPhotosRes, recentLeadsRes] =
-    await Promise.all([
-      supabase.from("galleries").select("*", { count: "exact", head: true }).eq("owner_id", profile.id),
-      supabase
-        .from("photos")
-        .select("*, galleries!inner(owner_id)", { count: "exact", head: true })
-        .eq("galleries.owner_id", profile.id),
-      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "new"),
-      supabase
-        .from("galleries")
-        .select("*")
-        .eq("owner_id", profile.id)
-        .order("updated_at", { ascending: false })
-        .limit(5),
-      supabase
-        .from("photos")
-        .select("*, galleries!inner(title, owner_id)")
-        .eq("galleries.owner_id", profile.id)
-        .order("created_at", { ascending: false })
-        .limit(8),
-      supabase.from("leads").select("*").order("created_at", { ascending: false }).limit(5),
-    ]);
+  const [
+    galleryCountRes,
+    photoCountRes,
+    videoCountRes,
+    newLeadCountRes,
+    recentGalleriesRes,
+    recentPhotosRes,
+    recentLeadsRes,
+  ] = await Promise.all([
+    supabase.from("galleries").select("*", { count: "exact", head: true }).eq("owner_id", profile.id),
+    supabase
+      .from("photos")
+      .select("*, galleries!inner(owner_id)", { count: "exact", head: true })
+      .eq("galleries.owner_id", profile.id),
+    supabase
+      .from("videos")
+      .select("*, galleries!inner(owner_id)", { count: "exact", head: true })
+      .eq("galleries.owner_id", profile.id),
+    supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "new"),
+    supabase
+      .from("galleries")
+      .select("*")
+      .eq("owner_id", profile.id)
+      .order("updated_at", { ascending: false })
+      .limit(5),
+    supabase
+      .from("photos")
+      .select("*, galleries!inner(title, owner_id)")
+      .eq("galleries.owner_id", profile.id)
+      .order("created_at", { ascending: false })
+      .limit(8),
+    supabase.from("leads").select("*").order("created_at", { ascending: false }).limit(5),
+  ]);
 
   if (galleryCountRes.error) throw galleryCountRes.error;
   if (photoCountRes.error) throw photoCountRes.error;
+  if (videoCountRes.error) throw videoCountRes.error;
   if (recentGalleriesRes.error) throw recentGalleriesRes.error;
   if (recentPhotosRes.error) throw recentPhotosRes.error;
 
@@ -156,6 +190,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   return {
     galleryCount: galleryCountRes.count ?? 0,
     photoCount: photoCountRes.count ?? 0,
+    videoCount: videoCountRes.count ?? 0,
     newLeadCount: newLeadCountRes.error ? 0 : (newLeadCountRes.count ?? 0),
     recentGalleries: recentGalleriesRes.data ?? [],
     recentPhotos,

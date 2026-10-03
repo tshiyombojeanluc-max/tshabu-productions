@@ -5,8 +5,10 @@ import { GalleryForm } from "@/app/dashboard/_components/gallery-form";
 import { GalleryCoverUploader } from "@/app/dashboard/_components/gallery-cover-uploader";
 import { PhotoUploader } from "@/app/dashboard/_components/photo-uploader";
 import { PhotoGrid } from "@/app/dashboard/_components/photo-grid";
+import { VideoUploader } from "@/app/dashboard/_components/video-uploader";
+import { VideoGrid } from "@/app/dashboard/_components/video-grid";
 import { EmptyState } from "@/app/dashboard/_components/empty-state";
-import { Images } from "lucide-react";
+import { Images, Film } from "lucide-react";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -20,7 +22,7 @@ export default async function GalleryDetailPage({ params }: { params: Promise<{ 
 
   if (!result) notFound();
 
-  const { gallery, photos } = result;
+  const { gallery, photos, videos } = result;
   const otherGalleries = allGalleries.filter((g) => g.id !== gallery.id).map((g) => ({ id: g.id, title: g.title }));
 
   return (
@@ -48,6 +50,25 @@ export default async function GalleryDetailPage({ params }: { params: Promise<{ 
           <>
             <p className="mb-4 text-sm text-tshabu-graphite">Drag photos to reorder them — this is the order visitors will see.</p>
             <PhotoGrid galleryId={gallery.id} photos={photos} otherGalleries={otherGalleries} />
+          </>
+        )}
+      </div>
+
+      <div>
+        <h2 className="mb-6 text-lg font-semibold uppercase tracking-tight">Upload Videos</h2>
+        <VideoUploader galleryId={gallery.id} userId={profile.id} />
+      </div>
+
+      <div>
+        <h2 className="mb-6 text-lg font-semibold uppercase tracking-tight">
+          Videos <span className="text-tshabu-graphite">({videos.length})</span>
+        </h2>
+        {videos.length === 0 ? (
+          <EmptyState icon={<Film className="h-10 w-10" />} title="No videos yet" description="Upload videos above to get started." />
+        ) : (
+          <>
+            <p className="mb-4 text-sm text-tshabu-graphite">Drag videos to reorder them — this is the order visitors will see.</p>
+            <VideoGrid galleryId={gallery.id} videos={videos} otherGalleries={otherGalleries} />
           </>
         )}
       </div>

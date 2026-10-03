@@ -127,6 +127,25 @@ export default async function ProjectPage({
         </Reveal>
       </section>
 
+      {project.videos.length > 0 && (
+        <div className="space-y-6 pb-20 md:pb-28">
+          {project.videos.map((video, i) => {
+            const isPortrait = video.width / video.height < 0.9;
+            return (
+              <ImageReveal key={video.src} className={cn("container-edit", isPortrait && "flex justify-center")}>
+                <video
+                  src={video.src}
+                  controls
+                  playsInline
+                  aria-label={`${project.name} film ${i + 1}`}
+                  className={cn("h-auto w-full bg-tshabu-charcoal", isPortrait && "max-w-xl")}
+                />
+              </ImageReveal>
+            );
+          })}
+        </div>
+      )}
+
       <div className="space-y-6 pb-20 md:pb-28">
         {project.gallery.map((photo, i) => {
           const isPortrait = photo.width / photo.height < 0.9;
