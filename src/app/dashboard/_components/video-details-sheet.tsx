@@ -54,7 +54,13 @@ export function VideoDetailsSheet({ video }: { video: Video }) {
         </SheetHeader>
         <div className="flex flex-col gap-6 overflow-y-auto p-6">
           <div className="relative aspect-[4/3] w-full overflow-hidden bg-tshabu-charcoal">
-            <video src={video.video_url} muted controls className="h-full w-full object-cover" />
+            <video
+              src={video.video_url}
+              poster={video.thumbnail_url ?? undefined}
+              muted
+              controls
+              className="h-full w-full object-cover"
+            />
           </div>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">

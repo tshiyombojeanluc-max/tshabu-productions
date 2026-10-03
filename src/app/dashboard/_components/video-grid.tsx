@@ -44,7 +44,13 @@ function SortableVideo({
         isDragging && "z-10 opacity-70"
       )}
     >
-      <video src={video.video_url} muted preload="metadata" className="h-full w-full object-cover" />
+      <video
+        src={video.video_url}
+        poster={video.thumbnail_url ?? undefined}
+        muted
+        preload="metadata"
+        className="h-full w-full object-cover"
+      />
 
       <button
         type="button"

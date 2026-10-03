@@ -120,6 +120,8 @@ export type Database = {
           width: number;
           height: number;
           duration_seconds: number;
+          thumbnail_url: string | null;
+          thumbnail_storage_path: string | null;
           title: string | null;
           description: string | null;
           display_order: number;
@@ -133,6 +135,8 @@ export type Database = {
           width: number;
           height: number;
           duration_seconds: number;
+          thumbnail_url?: string | null;
+          thumbnail_storage_path?: string | null;
           title?: string | null;
           description?: string | null;
           display_order?: number;

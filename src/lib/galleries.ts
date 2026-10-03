@@ -30,7 +30,12 @@ function toProject(gallery: Gallery, photos: Photo[], videos: Video[]): Project 
     coverImage: gallery.cover_image ?? sortedPhotos[0]?.image_url ?? "",
     coverAspect: coverAspect(gallery.cover_width, gallery.cover_height),
     gallery: sortedPhotos.map((p) => ({ src: p.image_url, width: p.width, height: p.height })),
-    videos: sortedVideos.map((v) => ({ src: v.video_url, width: v.width, height: v.height })),
+    videos: sortedVideos.map((v) => ({
+      src: v.video_url,
+      width: v.width,
+      height: v.height,
+      poster: v.thumbnail_url ?? undefined,
+    })),
     credits: [{ role: "Photography", name: "Tshabu Productions" }],
     featured: gallery.featured,
     updatedAt: gallery.updated_at,

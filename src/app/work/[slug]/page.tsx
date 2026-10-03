@@ -135,6 +135,7 @@ export default async function ProjectPage({
               <ImageReveal key={video.src} className={cn("container-edit", isPortrait && "flex justify-center")}>
                 <video
                   src={video.src}
+                  poster={video.poster}
                   controls
                   playsInline
                   aria-label={`${project.name} film ${i + 1}`}

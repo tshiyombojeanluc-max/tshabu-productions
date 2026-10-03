@@ -61,6 +61,8 @@ export function VideoUploader({ galleryId, userId }: { galleryId: string; userId
             width: uploaded.width,
             height: uploaded.height,
             durationSeconds: uploaded.durationSeconds,
+            thumbnailUrl: uploaded.thumbnailUrl,
+            thumbnailStoragePath: uploaded.thumbnailStoragePath,
             title: item.file.name.replace(/\.[^.]+$/, ""),
           });
 

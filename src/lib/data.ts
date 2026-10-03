@@ -35,7 +35,7 @@ export type Project = {
   coverImage: string;
   coverAspect: "portrait" | "landscape" | "square";
   gallery: { src: string; width: number; height: number }[];
-  videos: { src: string; width: number; height: number }[];
+  videos: { src: string; width: number; height: number; poster?: string }[];
   credits: { role: string; name: string }[];
   featured: boolean;
   /** ISO timestamp of the gallery's last edit — used for sitemap.xml. */

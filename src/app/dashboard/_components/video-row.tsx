@@ -11,7 +11,13 @@ export function VideoRow({ video }: { video: VideoWithGallery }) {
   return (
     <div className="group relative aspect-square overflow-hidden border border-border bg-tshabu-charcoal">
       <Link href={`/dashboard/galleries/${video.gallery_id}`} className="absolute inset-0">
-        <video src={video.video_url} muted preload="metadata" className="h-full w-full object-cover" />
+        <video
+          src={video.video_url}
+          poster={video.thumbnail_url ?? undefined}
+          muted
+          preload="metadata"
+          className="h-full w-full object-cover"
+        />
       </Link>
       <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
         <p className="pointer-events-auto truncate text-xs text-white">{video.gallery_title}</p>

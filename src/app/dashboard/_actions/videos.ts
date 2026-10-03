@@ -29,6 +29,8 @@ export type NewVideo = {
   width: number;
   height: number;
   durationSeconds: number;
+  thumbnailUrl?: string;
+  thumbnailStoragePath?: string;
   title?: string;
 };
 
@@ -63,6 +65,8 @@ export async function createVideoRecord(video: NewVideo): Promise<{ error: strin
       width: video.width,
       height: video.height,
       duration_seconds: video.durationSeconds,
+      thumbnail_url: video.thumbnailUrl || null,
+      thumbnail_storage_path: video.thumbnailStoragePath || null,
       title: video.title || null,
       display_order: nextOrder,
     })
@@ -75,14 +79,19 @@ export async function createVideoRecord(video: NewVideo): Promise<{ error: strin
   return { id: data.id };
 }
 
-type VideoWithGallerySlug = { storage_path: string; gallery_id: string; galleries: { slug: string } | null };
+type VideoWithGallerySlug = {
+  storage_path: string;
+  thumbnail_storage_path: string | null;
+  gallery_id: string;
+  galleries: { slug: string } | null;
+};
 
 export async function deleteVideo(videoId: string): Promise<{ error: string } | void> {
   const { supabase } = await getAuthedClient();
 
   const { data: videoRow, error: findError } = await supabase
     .from("videos")
-    .select("storage_path, gallery_id, galleries(slug)")
+    .select("storage_path, thumbnail_storage_path, gallery_id, galleries(slug)")
     .eq("id", videoId)
     .single();
 
@@ -93,6 +102,9 @@ export async function deleteVideo(videoId: string): Promise<{ error: string } | 
   if (error || !data || data.length === 0) return { error: "Could not delete the video. Please try again." };
 
   await supabase.storage.from("gallery-videos").remove([video.storage_path]);
+  if (video.thumbnail_storage_path) {
+    await supabase.storage.from("gallery-photos").remove([video.thumbnail_storage_path]);
+  }
 
   await revalidateGallery(video.gallery_id, video.galleries?.slug);
 }
