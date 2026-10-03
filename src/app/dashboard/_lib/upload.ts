@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
+import { supabaseUrl, supabaseAnonKey } from "@/lib/supabase/env";
 
 export type UploadResult = {
   storagePath: string;
@@ -112,24 +113,82 @@ function safeFileName(name: string, fallback = "photo"): string {
 }
 
 /**
+ * Uploads a file straight from the browser to Supabase Storage via a raw
+ * XHR request shaped exactly like the one @supabase/storage-js's own
+ * `upload()` makes internally (same endpoint, same FormData body, same
+ * headers) — the SDK's method wraps `fetch`, which exposes no upload
+ * progress events, so large files (especially video) otherwise have no way
+ * to show anything better than an indeterminate spinner.
+ */
+function uploadWithProgress(
+  bucket: string,
+  path: string,
+  file: File | Blob,
+  onProgress?: (fraction: number) => void
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    (async () => {
+      const supabase = createClient();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session) {
+        reject(new Error("Your session has expired — please sign in again."));
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("cacheControl", "31536000");
+      formData.append("", file);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", `${supabaseUrl()}/storage/v1/object/${bucket}/${path}`);
+      xhr.setRequestHeader("Authorization", `Bearer ${session.access_token}`);
+      xhr.setRequestHeader("apikey", supabaseAnonKey());
+      xhr.setRequestHeader("x-upsert", "false");
+
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable && onProgress) onProgress(event.loaded / event.total);
+      };
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve();
+          return;
+        }
+        let message = `Upload failed (${xhr.status}).`;
+        try {
+          const body = JSON.parse(xhr.responseText) as { message?: string };
+          if (body.message) message = body.message;
+        } catch {
+          // Response wasn't JSON — fall back to the generic status message above.
+        }
+        reject(new Error(message));
+      };
+      xhr.onerror = () => reject(new Error("Upload failed — check your connection and try again."));
+      xhr.send(formData);
+    })();
+  });
+}
+
+/**
  * Uploads straight from the browser to Supabase Storage (bypassing our own
  * server entirely), so large, high-resolution photography files never hit
  * the Next.js Server Action body-size cap. Storage RLS — not this function —
  * is what actually enforces that a user can only write under their own
  * "<user_id>/..." folder prefix.
  */
-export async function uploadImageToStorage(file: File, userId: string, folder: string): Promise<UploadResult> {
+export async function uploadImageToStorage(
+  file: File,
+  userId: string,
+  folder: string,
+  onProgress?: (fraction: number) => void
+): Promise<UploadResult> {
   const { width, height } = await readImageDimensions(file);
 
   const supabase = createClient();
   const path = `${userId}/${folder}/${safeFileName(file.name)}`;
 
-  const { error } = await supabase.storage.from(BUCKET).upload(path, file, {
-    cacheControl: "31536000",
-    upsert: false,
-  });
-
-  if (error) throw new Error(error.message);
+  await uploadWithProgress(BUCKET, path, file, onProgress);
 
   const {
     data: { publicUrl },
@@ -139,18 +198,18 @@ export async function uploadImageToStorage(file: File, userId: string, folder: s
 }
 
 /** Same direct-from-browser pattern as uploadImageToStorage, for the gallery-videos bucket. */
-export async function uploadVideoToStorage(file: File, userId: string, folder: string): Promise<VideoUploadResult> {
+export async function uploadVideoToStorage(
+  file: File,
+  userId: string,
+  folder: string,
+  onProgress?: (fraction: number) => void
+): Promise<VideoUploadResult> {
   const { width, height, durationSeconds } = await readVideoMetadata(file);
 
   const supabase = createClient();
   const path = `${userId}/${folder}/${safeFileName(file.name, "video")}`;
 
-  const { error } = await supabase.storage.from(VIDEO_BUCKET).upload(path, file, {
-    cacheControl: "31536000",
-    upsert: false,
-  });
-
-  if (error) throw new Error(error.message);
+  await uploadWithProgress(VIDEO_BUCKET, path, file, onProgress);
 
   const {
     data: { publicUrl },

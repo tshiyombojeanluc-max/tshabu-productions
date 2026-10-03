@@ -14,6 +14,7 @@ type UploadItem = {
   file: File;
   previewUrl: string;
   status: Status;
+  progress: number;
   error?: string;
 };
 
@@ -45,13 +46,16 @@ export function PhotoUploader({ galleryId, userId }: { galleryId: string; userId
         file,
         previewUrl: URL.createObjectURL(file),
         status: "uploading",
+        progress: 0,
       }));
 
       setItems((prev) => [...newItems, ...prev]);
 
       newItems.forEach(async (item) => {
         try {
-          const uploaded = await uploadImageToStorage(item.file, userId, `galleries/${galleryId}`);
+          const uploaded = await uploadImageToStorage(item.file, userId, `galleries/${galleryId}`, (fraction) =>
+            setItems((prev) => prev.map((i) => (i.id === item.id ? { ...i, progress: fraction } : i)))
+          );
           setItems((prev) => prev.map((i) => (i.id === item.id ? { ...i, status: "processing" } : i)));
 
           const result = await createPhotoRecord({
@@ -133,15 +137,23 @@ export function PhotoUploader({ galleryId, userId }: { galleryId: string; userId
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm">{item.file.name}</p>
                 <p className={cn("text-xs", item.status === "error" ? "text-red-600" : "text-tshabu-graphite")}>
-                  {item.status === "uploading" && "Uploading…"}
+                  {item.status === "uploading" && `Uploading… ${Math.round(item.progress * 100)}%`}
                   {item.status === "processing" && "Processing…"}
                   {item.status === "done" && "Uploaded successfully"}
                   {item.status === "error" && (item.error ?? "Upload failed")}
                 </p>
+                {item.status === "uploading" && (
+                  <div className="mt-1.5 h-1 w-full max-w-40 bg-tshabu-graphite/20">
+                    <div
+                      className="h-1 bg-tshabu-black transition-[width]"
+                      style={{ width: `${Math.round(item.progress * 100)}%` }}
+                    />
+                  </div>
+                )}
               </div>
               {item.status === "done" && <CheckCircle2 className="h-5 w-5 shrink-0 text-green-600" />}
               {item.status === "error" && <AlertCircle className="h-5 w-5 shrink-0 text-red-600" />}
-              {(item.status === "uploading" || item.status === "processing") && (
+              {item.status === "processing" && (
                 <div
                   aria-label="Loading"
                   className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-tshabu-graphite/30 border-t-tshabu-black"
