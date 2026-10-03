@@ -49,6 +49,7 @@ export async function listGalleries(): Promise<Gallery[]> {
     .from("galleries")
     .select("*")
     .eq("owner_id", profile.id)
+    .order("display_order", { ascending: true })
     .order("created_at", { ascending: false });
 
   if (error) throw error;

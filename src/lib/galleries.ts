@@ -49,6 +49,7 @@ export const getPublishedProjects = cache(async (): Promise<Project[]> => {
     .from("galleries")
     .select("*, photos(*), videos(*)")
     .eq("published", true)
+    .order("display_order", { ascending: true })
     .order("created_at", { ascending: false });
 
   if (error || !data) return [];

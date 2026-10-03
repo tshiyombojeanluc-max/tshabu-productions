@@ -3,7 +3,7 @@ import { Images, Plus } from "lucide-react";
 import { listGalleries } from "@/app/dashboard/_lib/data";
 import { PageHeader } from "@/app/dashboard/_components/page-header";
 import { EmptyState } from "@/app/dashboard/_components/empty-state";
-import { GalleryCard } from "@/app/dashboard/_components/gallery-card";
+import { GalleryGrid } from "@/app/dashboard/_components/gallery-grid";
 import { Button } from "@/components/ui/button";
 
 export const metadata = { title: "Galleries" };
@@ -44,11 +44,12 @@ export default async function GalleriesPage() {
           }
         />
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {galleries.map((gallery) => (
-            <GalleryCard key={gallery.id} gallery={gallery} />
-          ))}
-        </div>
+        <>
+          <p className="mb-4 text-sm text-tshabu-graphite">
+            Drag galleries to reorder them — this is the order visitors see on /work.
+          </p>
+          <GalleryGrid galleries={galleries} />
+        </>
       )}
     </div>
   );

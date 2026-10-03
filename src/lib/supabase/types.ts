@@ -47,6 +47,7 @@ export type Database = {
           cover_height: number | null;
           published: boolean;
           featured: boolean;
+          display_order: number;
           created_at: string;
           updated_at: string;
         };
@@ -76,6 +77,7 @@ export type Database = {
           cover_height?: number | null;
           published?: boolean;
           featured?: boolean;
+          display_order?: number;
         };
         Relationships: [];
       };

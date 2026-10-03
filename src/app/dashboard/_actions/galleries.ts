@@ -143,6 +143,22 @@ export async function togglePublished(id: string, published: boolean): Promise<{
   revalidatePath(`/work/${data[0].slug}`);
 }
 
+/** Bulk-persists a new gallery order after a drag-and-drop reorder in the dashboard grid. */
+export async function reorderGalleries(orderedGalleryIds: string[]): Promise<{ error: string } | void> {
+  const { supabase } = await getAuthedClient();
+
+  const results = await Promise.all(
+    orderedGalleryIds.map((id, index) => supabase.from("galleries").update({ display_order: index }).eq("id", id))
+  );
+
+  const failed = results.find((r) => r.error);
+  if (failed) return { error: "Could not save the new order. Please try again." };
+
+  revalidatePath("/dashboard/galleries");
+  revalidatePath("/");
+  revalidatePath("/work");
+}
+
 /** Sets a gallery's cover from a file the client already uploaded directly to storage. */
 export async function setGalleryCover(
   galleryId: string,
