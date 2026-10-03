@@ -3,7 +3,7 @@ import { ImagePlus } from "lucide-react";
 import { listAllPhotos } from "@/app/dashboard/_lib/data";
 import { PageHeader } from "@/app/dashboard/_components/page-header";
 import { EmptyState } from "@/app/dashboard/_components/empty-state";
-import { PhotoRow } from "@/app/dashboard/_components/photo-row";
+import { PhotoSearchGrid } from "@/app/dashboard/_components/photo-search-grid";
 import { Button } from "@/components/ui/button";
 
 export const metadata = { title: "Photos" };
@@ -31,11 +31,7 @@ export default async function AllPhotosPage() {
           }
         />
       ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          {photos.map((photo) => (
-            <PhotoRow key={photo.id} photo={photo} />
-          ))}
-        </div>
+        <PhotoSearchGrid photos={photos} />
       )}
     </div>
   );

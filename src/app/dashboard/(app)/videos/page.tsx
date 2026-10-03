@@ -3,7 +3,7 @@ import { Film } from "lucide-react";
 import { listAllVideos } from "@/app/dashboard/_lib/data";
 import { PageHeader } from "@/app/dashboard/_components/page-header";
 import { EmptyState } from "@/app/dashboard/_components/empty-state";
-import { VideoRow } from "@/app/dashboard/_components/video-row";
+import { VideoSearchGrid } from "@/app/dashboard/_components/video-search-grid";
 import { Button } from "@/components/ui/button";
 
 export const metadata = { title: "Videos" };
@@ -31,11 +31,7 @@ export default async function AllVideosPage() {
           }
         />
       ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          {videos.map((video) => (
-            <VideoRow key={video.id} video={video} />
-          ))}
-        </div>
+        <VideoSearchGrid videos={videos} />
       )}
     </div>
   );
