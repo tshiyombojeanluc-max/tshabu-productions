@@ -135,6 +135,57 @@ export async function reorderPhotos(galleryId: string, orderedPhotoIds: string[]
   await revalidateGallery(galleryId, gallery?.slug);
 }
 
+/** Deletes several photos (possibly spanning multiple galleries) in one pass. */
+export async function bulkDeletePhotos(photoIds: string[]): Promise<{ error: string } | void> {
+  if (photoIds.length === 0) return;
+  const { supabase } = await getAuthedClient();
+
+  const { data: rows, error: findError } = await supabase
+    .from("photos")
+    .select("storage_path, gallery_id, galleries(slug)")
+    .in("id", photoIds);
+
+  if (findError || !rows || rows.length === 0) return { error: "Photos not found." };
+  const photos = rows as unknown as PhotoWithGallerySlug[];
+
+  const { error } = await supabase.from("photos").delete().in("id", photoIds);
+  if (error) return { error: "Could not delete the photos. Please try again." };
+
+  await supabase.storage.from("gallery-photos").remove(photos.map((p) => p.storage_path));
+
+  const byGallery = new Map<string, string | null | undefined>();
+  photos.forEach((p) => byGallery.set(p.gallery_id, p.galleries?.slug));
+  await Promise.all([...byGallery.entries()].map(([galleryId, slug]) => revalidateGallery(galleryId, slug)));
+}
+
+/** Moves several photos (possibly from different source galleries) into one target gallery. */
+export async function bulkMovePhotos(photoIds: string[], newGalleryId: string): Promise<{ error: string } | void> {
+  if (photoIds.length === 0) return;
+  const { supabase } = await getAuthedClient();
+
+  const { data: currentRows } = await supabase.from("photos").select("gallery_id, galleries(slug)").in("id", photoIds);
+  const sourceGalleries = new Map<string, string | null | undefined>();
+  (currentRows as unknown as { gallery_id: string; galleries: { slug: string } | null }[] | null)?.forEach((row) =>
+    sourceGalleries.set(row.gallery_id, row.galleries?.slug)
+  );
+
+  const { data, error } = await supabase
+    .from("photos")
+    .update({ gallery_id: newGalleryId })
+    .in("id", photoIds)
+    .select("id, galleries(slug)");
+
+  if (error) return { error: "Could not move the photos — check they belong to one of your galleries." };
+  if (!data || data.length === 0) return { error: "Photos not found." };
+
+  const newSlug = (data[0] as unknown as { galleries: { slug: string } | null }).galleries?.slug;
+
+  await Promise.all([
+    ...[...sourceGalleries.entries()].map(([galleryId, slug]) => revalidateGallery(galleryId, slug)),
+    revalidateGallery(newGalleryId, newSlug),
+  ]);
+}
+
 export async function movePhotoToGallery(photoId: string, newGalleryId: string): Promise<{ error: string } | void> {
   const { supabase } = await getAuthedClient();
 

@@ -149,6 +149,59 @@ export async function reorderVideos(galleryId: string, orderedVideoIds: string[]
   await revalidateGallery(galleryId, gallery?.slug);
 }
 
+/** Deletes several videos (possibly spanning multiple galleries) in one pass. */
+export async function bulkDeleteVideos(videoIds: string[]): Promise<{ error: string } | void> {
+  if (videoIds.length === 0) return;
+  const { supabase } = await getAuthedClient();
+
+  const { data: rows, error: findError } = await supabase
+    .from("videos")
+    .select("storage_path, thumbnail_storage_path, gallery_id, galleries(slug)")
+    .in("id", videoIds);
+
+  if (findError || !rows || rows.length === 0) return { error: "Videos not found." };
+  const videos = rows as unknown as VideoWithGallerySlug[];
+
+  const { error } = await supabase.from("videos").delete().in("id", videoIds);
+  if (error) return { error: "Could not delete the videos. Please try again." };
+
+  await supabase.storage.from("gallery-videos").remove(videos.map((v) => v.storage_path));
+  const posterPaths = videos.map((v) => v.thumbnail_storage_path).filter((p): p is string => Boolean(p));
+  if (posterPaths.length > 0) await supabase.storage.from("gallery-photos").remove(posterPaths);
+
+  const byGallery = new Map<string, string | null | undefined>();
+  videos.forEach((v) => byGallery.set(v.gallery_id, v.galleries?.slug));
+  await Promise.all([...byGallery.entries()].map(([galleryId, slug]) => revalidateGallery(galleryId, slug)));
+}
+
+/** Moves several videos (possibly from different source galleries) into one target gallery. */
+export async function bulkMoveVideos(videoIds: string[], newGalleryId: string): Promise<{ error: string } | void> {
+  if (videoIds.length === 0) return;
+  const { supabase } = await getAuthedClient();
+
+  const { data: currentRows } = await supabase.from("videos").select("gallery_id, galleries(slug)").in("id", videoIds);
+  const sourceGalleries = new Map<string, string | null | undefined>();
+  (currentRows as unknown as { gallery_id: string; galleries: { slug: string } | null }[] | null)?.forEach((row) =>
+    sourceGalleries.set(row.gallery_id, row.galleries?.slug)
+  );
+
+  const { data, error } = await supabase
+    .from("videos")
+    .update({ gallery_id: newGalleryId })
+    .in("id", videoIds)
+    .select("id, galleries(slug)");
+
+  if (error) return { error: "Could not move the videos — check they belong to one of your galleries." };
+  if (!data || data.length === 0) return { error: "Videos not found." };
+
+  const newSlug = (data[0] as unknown as { galleries: { slug: string } | null }).galleries?.slug;
+
+  await Promise.all([
+    ...[...sourceGalleries.entries()].map(([galleryId, slug]) => revalidateGallery(galleryId, slug)),
+    revalidateGallery(newGalleryId, newSlug),
+  ]);
+}
+
 export async function moveVideoToGallery(videoId: string, newGalleryId: string): Promise<{ error: string } | void> {
   const { supabase } = await getAuthedClient();
 

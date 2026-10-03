@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Image from "next/image";
-import { GripVertical, Star, Trash2 } from "lucide-react";
+import { GripVertical, Star, Trash2, Check } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -14,9 +14,10 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, rectSortingStrategy, useSortable, arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { deletePhoto, movePhotoToGallery, reorderPhotos } from "@/app/dashboard/_actions/photos";
+import { bulkDeletePhotos, bulkMovePhotos, deletePhoto, movePhotoToGallery, reorderPhotos } from "@/app/dashboard/_actions/photos";
 import { setGalleryCoverFromPhoto } from "@/app/dashboard/_actions/galleries";
 import { ConfirmDeleteButton } from "@/app/dashboard/_components/confirm-delete-button";
+import { BulkActionBar } from "@/app/dashboard/_components/bulk-action-bar";
 import { PhotoDetailsSheet } from "@/app/dashboard/_components/photo-details-sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -25,9 +26,13 @@ import type { Photo } from "@/lib/supabase/types";
 function SortablePhoto({
   photo,
   otherGalleries,
+  selected,
+  onToggleSelect,
 }: {
   photo: Photo;
   otherGalleries: { id: string; title: string }[];
+  selected: boolean;
+  onToggleSelect: () => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: photo.id });
   const [pending, startTransition] = useTransition();
@@ -43,7 +48,8 @@ function SortablePhoto({
       style={style}
       className={cn(
         "group relative aspect-square overflow-hidden border border-border bg-tshabu-charcoal",
-        isDragging && "z-10 opacity-70"
+        isDragging && "z-10 opacity-70",
+        selected && "ring-2 ring-tshabu-black ring-offset-2"
       )}
     >
       <Image src={photo.image_url} alt={photo.title ?? ""} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />
@@ -56,6 +62,21 @@ function SortablePhoto({
         className="absolute top-2 left-2 flex h-7 w-7 cursor-grab items-center justify-center bg-black/50 text-white opacity-0 transition-opacity touch-none group-hover:opacity-100 active:cursor-grabbing"
       >
         <GripVertical className="h-4 w-4" />
+      </button>
+
+      <button
+        type="button"
+        onClick={onToggleSelect}
+        aria-label={selected ? "Deselect photo" : "Select photo"}
+        aria-pressed={selected}
+        className={cn(
+          "absolute top-2 right-2 flex h-7 w-7 items-center justify-center border transition-colors",
+          selected
+            ? "border-tshabu-black bg-tshabu-black text-white"
+            : "border-white/70 bg-black/30 text-transparent opacity-0 hover:bg-black/50 group-hover:opacity-100"
+        )}
+      >
+        <Check className="h-4 w-4" />
       </button>
 
       <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-1 bg-gradient-to-t from-black/70 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
@@ -125,6 +146,7 @@ export function PhotoGrid({
   otherGalleries: { id: string; title: string }[];
 }) {
   const [items, setItems] = useState(photos);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
   // Resync local (optimistically reordered) state whenever fresh server data
   // arrives — a new upload, a deletion, or a move to/from this gallery.
   // Adjusting state during render (React's sanctioned pattern for this,
@@ -133,7 +155,18 @@ export function PhotoGrid({
   if (photos !== syncedPhotos) {
     setSyncedPhotos(photos);
     setItems(photos);
+    const stillPresent = new Set(photos.map((p) => p.id));
+    setSelected((prev) => new Set([...prev].filter((id) => stillPresent.has(id))));
   }
+
+  const toggleSelect = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -157,14 +190,34 @@ export function PhotoGrid({
   };
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <SortableContext items={items.map((p) => p.id)} strategy={rectSortingStrategy}>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {items.map((photo) => (
-            <SortablePhoto key={photo.id} photo={photo} otherGalleries={otherGalleries} />
-          ))}
-        </div>
-      </SortableContext>
-    </DndContext>
+    <div>
+      <BulkActionBar
+        count={selected.size}
+        itemNoun="photo"
+        otherGalleries={otherGalleries}
+        onMove={(targetGalleryId) => bulkMovePhotos([...selected], targetGalleryId)}
+        onDelete={async () => {
+          const result = await bulkDeletePhotos([...selected]);
+          if (!result || !("error" in result)) setSelected(new Set());
+          return result;
+        }}
+        onClear={() => setSelected(new Set())}
+      />
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={items.map((p) => p.id)} strategy={rectSortingStrategy}>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {items.map((photo) => (
+              <SortablePhoto
+                key={photo.id}
+                photo={photo}
+                otherGalleries={otherGalleries}
+                selected={selected.has(photo.id)}
+                onToggleSelect={() => toggleSelect(photo.id)}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
+    </div>
   );
 }
