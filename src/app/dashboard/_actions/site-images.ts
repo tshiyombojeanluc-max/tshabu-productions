@@ -38,7 +38,10 @@ export async function setSiteImage(
     height: image.height,
   });
 
-  if (error) return { error: "Could not save that photo. Please try again." };
+  if (error) {
+    console.error(`Site image save failed for "${key}":`, error);
+    return { error: "Could not save that photo. Please try again." };
+  }
 
   revalidatePublicPages();
 }
@@ -47,7 +50,10 @@ export async function resetSiteImage(key: string): Promise<{ error: string } | v
   const { supabase } = await getAuthedClient();
 
   const { error } = await supabase.from("site_images").delete().eq("key", key);
-  if (error) return { error: "Could not reset that photo. Please try again." };
+  if (error) {
+    console.error(`Site image reset failed for "${key}":`, error);
+    return { error: "Could not reset that photo. Please try again." };
+  }
 
   revalidatePublicPages();
 }
