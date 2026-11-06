@@ -4,8 +4,20 @@ export const site = {
   tagline: "Photography · Videography · Storytelling",
   email: "tshabuproductions@gmail.com",
   phone: "+27 67 105 7588",
+  /** WhatsApp number in international format, digits only (wa.me format). */
+  whatsapp: "27671057588",
   location: "Cape Town, South Africa",
 };
+
+/**
+ * Click-to-chat link with a pre-filled opener, so the first message already
+ * carries what a quote needs (event, date, venue) instead of just "hi".
+ */
+export function whatsappUrl(
+  text = "Hi Tshabu Productions, I'd like a quote. Event type: … Date: … Venue: …"
+): string {
+  return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
+}
 
 export const navLinks = [
   { label: "Work", href: "/work" },

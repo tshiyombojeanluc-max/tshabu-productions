@@ -99,6 +99,53 @@ function captureVideoPoster(file: File, atSeconds = 1): Promise<Blob> {
   });
 }
 
+/** Longest edge kept on upload — still sharp on a 5K display at full width. */
+const MAX_IMAGE_EDGE = 2560;
+const JPEG_QUALITY = 0.85;
+/** Files already at or under this size and edge are left exactly as uploaded. */
+const RECOMPRESS_THRESHOLD_BYTES = 1_500_000;
+
+/**
+ * Downscales and re-encodes oversized photos in the browser before upload.
+ * Camera originals routinely run 9–11 MB; anything that renders them
+ * without the Next image optimiser (OG previews, JSON-LD, direct links)
+ * ships that weight to every visitor. Only JPEG/WebP are touched — PNGs
+ * (e.g. a logo with transparency) and anything the browser can't decode
+ * are passed through unchanged. Never throws: on any failure the original
+ * file is uploaded instead, so this can only make an upload smaller.
+ */
+async function optimizeImageForWeb(file: File): Promise<File> {
+  if (!/^image\/(jpeg|webp)$/.test(file.type)) return file;
+
+  try {
+    const objectUrl = URL.createObjectURL(file);
+    const img = new window.Image();
+    img.src = objectUrl;
+    await img.decode();
+    URL.revokeObjectURL(objectUrl);
+
+    const longestEdge = Math.max(img.naturalWidth, img.naturalHeight);
+    if (longestEdge <= MAX_IMAGE_EDGE && file.size <= RECOMPRESS_THRESHOLD_BYTES) return file;
+
+    const scale = Math.min(1, MAX_IMAGE_EDGE / longestEdge);
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(img.naturalWidth * scale);
+    canvas.height = Math.round(img.naturalHeight * scale);
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return file;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", JPEG_QUALITY));
+    if (!blob || blob.size >= file.size) return file;
+
+    const jpegName = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+    return new File([blob], jpegName, { type: "image/jpeg", lastModified: file.lastModified });
+  } catch {
+    return file;
+  }
+}
+
 function safeFileName(name: string, fallback = "photo"): string {
   const dotIndex = name.lastIndexOf(".");
   const ext = dotIndex > -1 ? name.slice(dotIndex).toLowerCase() : "";
@@ -178,11 +225,15 @@ function uploadWithProgress(
  * "<user_id>/..." folder prefix.
  */
 export async function uploadImageToStorage(
-  file: File,
+  originalFile: File,
   userId: string,
   folder: string,
   onProgress?: (fraction: number) => void
 ): Promise<UploadResult> {
+  // Validate the original first so a non-image still gets the clear
+  // "doesn't look like a valid image" error, then shrink it for the web.
+  await readImageDimensions(originalFile);
+  const file = await optimizeImageForWeb(originalFile);
   const { width, height } = await readImageDimensions(file);
 
   const supabase = createClient();

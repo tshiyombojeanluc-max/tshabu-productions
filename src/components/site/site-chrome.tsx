@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/site/navbar";
 import Footer from "@/components/site/footer";
+import { WhatsAppButton } from "@/components/site/whatsapp-button";
 
 /**
  * The dashboard has its own sidebar shell (src/app/dashboard/(app)/layout.tsx)
@@ -18,6 +19,7 @@ export function SiteChrome({ children, logoSrc }: { children: React.ReactNode; l
       {!isDashboard && <Navbar logoSrc={logoSrc} />}
       <main>{children}</main>
       {!isDashboard && <Footer />}
+      {!isDashboard && <WhatsAppButton />}
     </>
   );
 }

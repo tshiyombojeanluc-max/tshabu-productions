@@ -19,6 +19,7 @@ async function revalidateGallery(galleryId: string, slug?: string | null) {
   revalidatePath(`/dashboard/galleries/${galleryId}`);
   revalidatePath("/");
   revalidatePath("/work");
+  revalidatePath("/sitemap.xml");
   if (slug) revalidatePath(`/work/${slug}`);
 }
 

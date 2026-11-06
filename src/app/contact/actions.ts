@@ -30,6 +30,9 @@ export async function submitContactForm(_prevState: ContactFormState, formData: 
   const projectType = String(formData.get("projectType") ?? "").trim();
   const budget = String(formData.get("budget") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
+  const phone = String(formData.get("phone") ?? "").trim();
+  const eventDate = String(formData.get("eventDate") ?? "").trim();
+  const venue = String(formData.get("venue") ?? "").trim();
 
   if (!firstName || !lastName || !email || !message) {
     return { error: "Please fill in your name, email and a short message." };
@@ -40,6 +43,21 @@ export async function submitContactForm(_prevState: ContactFormState, formData: 
   if (message.length > 5000) {
     return { error: "That message is a bit long — please keep it under 5000 characters." };
   }
+  if (phone.length > 40 || venue.length > 200 || (eventDate && !/^\d{4}-\d{2}-\d{2}$/.test(eventDate))) {
+    return { error: "Please check the phone, date and venue fields and try again." };
+  }
+
+  // Phone, event date and venue are what a quote actually needs, but the
+  // `leads` table has no columns for them yet. Rather than require a DB
+  // migration to land before this deploy (an insert naming a missing column
+  // would fail every enquiry), they're prepended to the message, so they
+  // show up in both the dashboard lead card and the notification email.
+  const details = [
+    phone ? `Phone / WhatsApp: ${phone}` : null,
+    eventDate ? `Event date: ${eventDate}` : null,
+    venue ? `Venue / Area: ${venue}` : null,
+  ].filter(Boolean);
+  const fullMessage = details.length > 0 ? `${details.join("\n")}\n\n${message}` : message;
 
   const leadFields = {
     first_name: firstName,
@@ -48,7 +66,7 @@ export async function submitContactForm(_prevState: ContactFormState, formData: 
     company: company || null,
     project_type: projectType || null,
     budget: budget || null,
-    message,
+    message: fullMessage,
   };
 
   const supabase = await createClient();

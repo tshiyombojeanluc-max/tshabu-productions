@@ -36,7 +36,13 @@ function toProject(gallery: Gallery, photos: Photo[], videos: Video[]): Project 
       height: v.height,
       poster: v.thumbnail_url ?? undefined,
     })),
-    credits: [{ role: "Photography", name: "Tshabu Productions" }],
+    // Derived from what the gallery actually contains, rather than every
+    // project crediting "Photography" only — a gallery with films attached
+    // now credits videography too.
+    credits: [
+      ...(sortedPhotos.length > 0 ? [{ role: "Photography", name: "Tshabu Productions" }] : []),
+      ...(sortedVideos.length > 0 ? [{ role: "Videography", name: "Tshabu Productions" }] : []),
+    ],
     featured: gallery.featured,
     updatedAt: gallery.updated_at,
   };
@@ -52,7 +58,13 @@ export const getPublishedProjects = cache(async (): Promise<Project[]> => {
     .order("display_order", { ascending: true })
     .order("created_at", { ascending: false });
 
-  if (error || !data) return [];
+  if (error || !data) {
+    // Still degrades to "no projects" so public pages render, but a failure
+    // here is no longer silent — an empty /work or sitemap.xml now leaves a
+    // trace in the server logs instead of looking like "no galleries yet".
+    console.error("getPublishedProjects failed:", error ?? "no data returned");
+    return [];
+  }
 
   return data.map((row) => {
     const { photos, videos, ...gallery } = row as Gallery & { photos: Photo[]; videos: Video[] };

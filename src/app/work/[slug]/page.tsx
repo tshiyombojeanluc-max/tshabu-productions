@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { Reveal, ImageReveal } from "@/components/site/reveal";
 import { JsonLd } from "@/components/site/json-ld";
 import { getAdjacentProjects, getProjectBySlug, getPublishedProjects } from "@/lib/galleries";
-import { joinLabel } from "@/lib/data";
+import { joinLabel, whatsappUrl, type Project } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { buildMetadata, breadcrumbJsonLd, absoluteUrl } from "@/lib/seo";
 
@@ -21,6 +21,21 @@ export async function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
 }
 
+/**
+ * Several galleries were published with no description (or a two-word one),
+ * which left their pages with an empty or near-empty meta description.
+ * Falls back to a factual sentence built only from the gallery's own fields
+ * — never invented detail — until the client writes a real one.
+ */
+function projectMetaDescription(project: Project): string {
+  if (project.description.trim().length >= 60) return project.description;
+  const kind = project.category && project.category !== "Private" ? project.category.toLowerCase() : "photography";
+  const photoCount = project.gallery.length > 0 ? ` ${project.gallery.length} photos` : "";
+  const base = `${project.name} —${photoCount} from Tshabu Productions' ${kind} work in Cape Town${project.year ? `, ${project.year}` : ""}.`;
+  const lead = project.description.trim().replace(/[.!?]+$/, "");
+  return lead ? `${lead}. ${base}` : base;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -31,7 +46,7 @@ export async function generateMetadata({
   if (!project) return {};
   return buildMetadata({
     title: project.name,
-    description: project.description,
+    description: projectMetaDescription(project),
     path: `/work/${project.slug}`,
     image: project.coverImage,
   });
@@ -52,7 +67,7 @@ export default async function ProjectPage({
     "@context": "https://schema.org",
     "@type": "CreativeWork",
     name: project.name,
-    description: project.description,
+    description: projectMetaDescription(project),
     url: absoluteUrl(`/work/${project.slug}`),
     image: project.gallery.map((photo) => absoluteUrl(photo.src)),
     // Omitted entirely rather than sent as "" when unset — an empty string
@@ -179,6 +194,35 @@ export default async function ProjectPage({
               </li>
             ))}
           </ul>
+        </Reveal>
+      </section>
+
+      {/* Every project previously dead-ended at the credits — a visitor
+          convinced by the work had no route to enquire from here. */}
+      <section className="container-edit pb-28 md:pb-40">
+        <Reveal className="flex flex-col gap-8 border-t border-tshabu-graphite/20 pt-12 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-xl">
+            <p className="label-caps mb-4 text-tshabu-graphite">Planning something similar?</p>
+            <p className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+              Tell us about your event and we&rsquo;ll send you a quote.
+            </p>
+          </div>
+          <div className="flex flex-col gap-4 sm:flex-row md:shrink-0">
+            <Link
+              href="/contact"
+              className="inline-block bg-tshabu-black px-8 py-4 text-center text-sm uppercase tracking-[0.2em] text-tshabu-paper transition-colors hover:bg-tshabu-charcoal"
+            >
+              Get a Quote →
+            </Link>
+            <a
+              href={whatsappUrl(`Hi Tshabu Productions, I saw your ${project.name} work and I'd like a quote. Date: … Venue: …`)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block border border-tshabu-graphite/40 px-8 py-4 text-center text-sm uppercase tracking-[0.2em] transition-colors hover:border-tshabu-black"
+            >
+              WhatsApp Us
+            </a>
+          </div>
         </Reveal>
       </section>
 

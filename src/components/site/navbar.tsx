@@ -16,7 +16,10 @@ export default function Navbar({ logoSrc = "/images/logo.png" }: { logoSrc?: str
     <>
       <header className="fixed inset-x-0 top-0 z-50 mix-blend-difference">
         <nav className="container-edit flex items-center justify-between py-6 text-tshabu-white">
-          <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-3">
+          {/* aria-label: below `sm` the visible name is hidden and the logo
+              sits on a separate layer, so without it this link has no
+              accessible name for screen readers. */}
+          <Link href="/" aria-label={`${site.name} — home`} onClick={() => setOpen(false)} className="flex items-center gap-3">
             <span aria-hidden="true" className="h-9 w-9 sm:h-10 sm:w-10" />
             <span className="hidden text-sm font-bold uppercase tracking-[0.2em] sm:inline">
               {site.name}

@@ -104,6 +104,7 @@ export async function updateGallery(id: string, _prevState: FormState, formData:
   revalidatePath(`/dashboard/galleries/${id}`);
   revalidatePath("/");
   revalidatePath("/work");
+  revalidatePath("/sitemap.xml");
   revalidatePath(`/work/${slug}`);
   return null;
 }
@@ -126,6 +127,7 @@ export async function deleteGallery(id: string): Promise<{ error: string } | voi
   revalidatePath("/dashboard/galleries");
   revalidatePath("/");
   revalidatePath("/work");
+  revalidatePath("/sitemap.xml");
   redirect("/dashboard/galleries");
 }
 
@@ -140,6 +142,7 @@ export async function togglePublished(id: string, published: boolean): Promise<{
   revalidatePath("/dashboard/galleries");
   revalidatePath("/");
   revalidatePath("/work");
+  revalidatePath("/sitemap.xml");
   revalidatePath(`/work/${data[0].slug}`);
 }
 
@@ -157,6 +160,7 @@ export async function reorderGalleries(orderedGalleryIds: string[]): Promise<{ e
   revalidatePath("/dashboard/galleries");
   revalidatePath("/");
   revalidatePath("/work");
+  revalidatePath("/sitemap.xml");
 }
 
 /** Sets a gallery's cover from a file the client already uploaded directly to storage. */
@@ -179,6 +183,7 @@ export async function setGalleryCover(
   revalidatePath(`/dashboard/galleries/${galleryId}`);
   revalidatePath("/");
   revalidatePath("/work");
+  revalidatePath("/sitemap.xml");
   revalidatePath(`/work/${data[0].slug}`);
 }
 

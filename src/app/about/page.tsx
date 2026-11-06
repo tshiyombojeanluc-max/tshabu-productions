@@ -71,7 +71,7 @@ export default async function AboutPage() {
           <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
             {approachSteps.map((step, i) => (
               <Reveal key={step.index} delay={i * 0.08}>
-                <p className="mb-6 text-sm text-tshabu-paper/40">{step.index}</p>
+                <p className="mb-6 text-sm text-tshabu-paper/60">{step.index}</p>
                 <h3 className="mb-3 text-2xl font-medium uppercase tracking-tight">{step.title}</h3>
                 <p className="text-tshabu-paper/60">{step.description}</p>
               </Reveal>

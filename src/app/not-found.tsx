@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+// No `robots` here: Next already emits <meta name="robots" content="noindex">
+// for not-found responses, and setting it again produced two conflicting
+// robots tags on every 404.
 export const metadata: Metadata = {
   title: "Page Not Found",
-  robots: { index: false, follow: false },
 };
 
 export default function NotFound() {

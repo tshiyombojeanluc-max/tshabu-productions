@@ -7,7 +7,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { services, site } from "@/lib/data";
+import Link from "next/link";
+import { services, site, whatsappUrl } from "@/lib/data";
 import { buildMetadata, breadcrumbJsonLd, absoluteUrl } from "@/lib/seo";
 
 export const metadata = buildMetadata({
@@ -102,7 +103,7 @@ export default function ServicesPage() {
               className="!border-b border-tshabu-graphite/20 py-2"
             >
               <Reveal delay={i * 0.05}>
-                <AccordionTrigger className="!rounded-none !border-none !py-8 hover:!no-underline focus-visible:!ring-0">
+                <AccordionTrigger className="!rounded-none !border-none !py-8 hover:!no-underline focus-visible:!ring-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-tshabu-black">
                   <div className="flex w-full items-baseline gap-6 pr-6">
                     <span className="label-caps text-tshabu-graphite">{service.index}</span>
                     <span className="text-2xl font-medium uppercase tracking-tight sm:text-4xl">
@@ -140,7 +141,7 @@ export default function ServicesPage() {
               className="!border-b border-tshabu-graphite/20 py-2"
             >
               <Reveal delay={i * 0.05}>
-                <AccordionTrigger className="!rounded-none !border-none !py-8 hover:!no-underline focus-visible:!ring-0">
+                <AccordionTrigger className="!rounded-none !border-none !py-8 hover:!no-underline focus-visible:!ring-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-tshabu-black">
                   <span className="max-w-2xl pr-6 text-lg font-medium tracking-tight sm:text-xl">
                     {faq.question}
                   </span>
@@ -154,6 +155,41 @@ export default function ServicesPage() {
             </AccordionItem>
           ))}
         </Accordion>
+      </section>
+
+      {/* The highest-intent page on the site previously ended at the FAQ
+          with no way forward — every visitor who'd read this far had to
+          find the contact page on their own. */}
+      <section className="bg-tshabu-black py-24 text-tshabu-paper md:py-32">
+        <div className="container-edit flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
+          <Reveal className="max-w-2xl">
+            <p className="label-caps mb-4 text-tshabu-paper/70">Planning an event?</p>
+            <h2 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+              Tell us the date and venue — we&rsquo;ll come back with a quote.
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1} className="flex flex-col gap-4 sm:flex-row md:shrink-0">
+            <Link
+              href="/contact"
+              className="inline-block bg-tshabu-paper px-8 py-4 text-center text-sm uppercase tracking-[0.2em] text-tshabu-black transition-colors hover:bg-tshabu-white"
+            >
+              Get a Quote →
+            </Link>
+            <a
+              href={whatsappUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block border border-tshabu-paper/40 px-8 py-4 text-center text-sm uppercase tracking-[0.2em] transition-colors hover:border-tshabu-paper"
+            >
+              WhatsApp Us
+            </a>
+          </Reveal>
+        </div>
+        <div className="container-edit mt-12">
+          <Link href="/work" className="label-caps text-tshabu-paper/70 underline underline-offset-4 hover:text-tshabu-paper">
+            See recent event work →
+          </Link>
+        </div>
       </section>
     </>
   );

@@ -6,8 +6,8 @@ import { SectionHeading } from "@/components/site/section-heading";
 import { ProjectGrid } from "@/components/site/project-grid";
 import ScrollAdventure, { type ScrollAdventurePage } from "@/components/ui/animated-scroll";
 import type { StreamImage } from "@/components/ui/image-stream-hero";
-import { joinLabel, navLinks, services, site } from "@/lib/data";
-import { getFeaturedProjects } from "@/lib/galleries";
+import { joinLabel, navLinks, services, site, type Project } from "@/lib/data";
+import { getPublishedProjects } from "@/lib/galleries";
 import { getSiteImageOverrides } from "@/lib/site-images";
 import { resolveSiteImage } from "@/lib/site-image-slots";
 import { buildMetadata } from "@/lib/seo";
@@ -41,7 +41,7 @@ export const metadata = buildMetadata({
   path: "/",
 });
 
-function buildShowreelPages(projects: Awaited<ReturnType<typeof getFeaturedProjects>>): ScrollAdventurePage[] {
+function buildShowreelPages(projects: Project[]): ScrollAdventurePage[] {
   return projects.slice(0, 4).map((project, i) => {
     const content = {
       heading: joinLabel(project.category, project.year),
@@ -66,8 +66,16 @@ function buildShowreelPages(projects: Awaited<ReturnType<typeof getFeaturedProje
 }
 
 export default async function HomePage() {
-  const [featuredProjects, imageOverrides] = await Promise.all([getFeaturedProjects(), getSiteImageOverrides()]);
+  const [allProjects, imageOverrides] = await Promise.all([getPublishedProjects(), getSiteImageOverrides()]);
+  const featuredProjects = allProjects.filter((p) => p.featured);
   const showreelPages = buildShowreelPages(featuredProjects);
+  // The showreel already features the first 4 featured projects, and the
+  // grid below used to repeat those exact same 4. Show the next projects in
+  // the client's chosen order instead, so the homepage surfaces 8 distinct
+  // pieces of work; falls back to the featured set if there aren't enough.
+  const showreelSlugs = new Set(featuredProjects.slice(0, 4).map((p) => p.slug));
+  const moreProjects = allProjects.filter((p) => !showreelSlugs.has(p.slug)).slice(0, 4);
+  const portfolioGridProjects = moreProjects.length > 0 ? moreProjects : featuredProjects.slice(0, 4);
   const heroStreamImages: StreamImage[] = heroStreamDefaults.map(({ key, alt }) => ({
     src: resolveSiteImage(imageOverrides, key),
     alt,
@@ -164,14 +172,14 @@ export default async function HomePage() {
 
           <section className="container-edit py-28 md:py-40">
             <div className="mb-16 flex items-end justify-between gap-6">
-              <SectionHeading label="Portfolio" title="Full Portfolio" />
+              <SectionHeading label="Portfolio" title="More Work" />
               <Reveal>
                 <Link href="/work" className="label-caps hidden shrink-0 whitespace-nowrap underline underline-offset-4 sm:block">
                   View all work →
                 </Link>
               </Reveal>
             </div>
-            <ProjectGrid projects={featuredProjects.slice(0, 4)} />
+            <ProjectGrid projects={portfolioGridProjects} />
             <Reveal className="mt-12 sm:hidden">
               <Link href="/work" className="label-caps underline underline-offset-4">
                 View all work →
@@ -189,7 +197,7 @@ export default async function HomePage() {
               <Reveal key={service.id} delay={i * 0.05}>
                 <li className="flex flex-col gap-2 border-t border-tshabu-paper/15 py-8 last:border-b sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-baseline gap-6">
-                    <span className="label-caps text-tshabu-paper/40">{service.index}</span>
+                    <span className="label-caps text-tshabu-paper/60">{service.index}</span>
                     <h3 className="text-2xl font-medium sm:text-3xl">{service.title}</h3>
                   </div>
                   <p className="text-tshabu-paper/60 sm:max-w-sm sm:text-right">{service.summary}</p>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Kaushan_Script } from "next/font/google";
 import { SiteChrome } from "@/components/site/site-chrome";
 import { JsonLd } from "@/components/site/json-ld";
+import { SiteAnalytics } from "@/components/site/site-analytics";
 import { SITE_URL, DEFAULT_OG_IMAGE, absoluteUrl } from "@/lib/seo";
 import { site, socialLinks } from "@/lib/data";
 import { getSiteImageOverrides } from "@/lib/site-images";
@@ -33,17 +34,6 @@ export const metadata: Metadata = {
   },
   description:
     "Tshabu Productions is a Cape Town photography and videography studio creating timeless visuals for events, brands and businesses. We don't just take photos or film videos — we tell your story.",
-  keywords: [
-    "Tshabu Productions",
-    "photography Cape Town",
-    "videography Cape Town",
-    "production company Cape Town",
-    "event photography Cape Town",
-    "event videography Cape Town",
-    "corporate video production Cape Town",
-    "brand photography Cape Town",
-    "post-production Cape Town",
-  ],
   openGraph: {
     title: "Tshabu Productions — Photography & Videography, Cape Town",
     description:
@@ -127,6 +117,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <JsonLd data={buildOrganizationJsonLd(logoSrc)} />
         <JsonLd data={websiteJsonLd} />
         <SiteChrome logoSrc={logoSrc}>{children}</SiteChrome>
+        <SiteAnalytics />
       </body>
     </html>
   );

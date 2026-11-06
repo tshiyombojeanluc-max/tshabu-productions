@@ -1,7 +1,7 @@
 import { Reveal } from "@/components/site/reveal";
 import { ContactForm } from "@/components/site/contact-form";
 import { JsonLd } from "@/components/site/json-ld";
-import { site, socialLinks } from "@/lib/data";
+import { site, socialLinks, whatsappUrl } from "@/lib/data";
 import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata = buildMetadata({
@@ -42,6 +42,12 @@ export default function ContactPage() {
             <p className="label-caps mb-2 text-tshabu-graphite">Phone</p>
             <a href={`tel:${site.phone}`} className="text-lg hover:underline">
               {site.phone}
+            </a>
+          </div>
+          <div>
+            <p className="label-caps mb-2 text-tshabu-graphite">WhatsApp</p>
+            <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="text-lg hover:underline">
+              Chat with us on WhatsApp →
             </a>
           </div>
           <div>

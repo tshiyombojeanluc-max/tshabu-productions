@@ -194,12 +194,15 @@ const ScrollExpandMedia = ({
               alt='Background'
               width={1920}
               height={1080}
+              // Full-bleed, so 100vw. No preload: this hero only renders on
+              // mobile (md:hidden), and a <head> preload would make every
+              // desktop visitor download a 1920/3840w image they never see.
+              sizes='100vw'
               className='w-screen h-screen'
               style={{
                 objectFit: 'cover',
                 objectPosition: 'center',
               }}
-              priority
             />
             <div className='absolute inset-0 bg-black/10' />
           </motion.div>
@@ -283,6 +286,14 @@ const ScrollExpandMedia = ({
                       alt={title || 'Media content'}
                       width={1280}
                       height={720}
+                      // This is the mobile LCP element. It caps at 95vw, so
+                      // phones get a ~1080w rendition instead of the 3840w
+                      // one a bare width={1280} produces at 2x/3x DPR. High
+                      // fetch priority once it's in the viewport; it stays
+                      // lazy so desktop (where this hero is display:none)
+                      // never fetches it.
+                      sizes='95vw'
+                      fetchPriority='high'
                       className='w-full h-full object-cover rounded-xl'
                     />
 

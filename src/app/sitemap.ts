@@ -2,6 +2,12 @@ import type { MetadataRoute } from "next";
 import { getPublishedProjects } from "@/lib/galleries";
 import { SITE_URL } from "@/lib/seo";
 
+// Without this, sitemap.xml is built once at deploy time and frozen —
+// whatever galleries existed (or failed to load) then is all Google ever
+// sees. Hourly ISR plus revalidatePath("/sitemap.xml") on every gallery
+// change in the dashboard keeps it in step with /work.
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const projects = await getPublishedProjects();
 

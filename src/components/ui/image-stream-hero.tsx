@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 /* ── the corridor ────────────────────────────────────────────────
@@ -244,12 +245,21 @@ export function ImageStreamHero({
                   }}
                 >
                   {img ? (
-                    <img
+                    // Goes through the Next image optimiser rather than a raw
+                    // <img>: dashboard uploads land in storage at full camera
+                    // resolution (two of these slots were 9–11 MB originals,
+                    // making the desktop homepage a 22 MB download). The
+                    // nearest card tops out around a third of the corridor's
+                    // width, so ~34vw is the largest rendition ever needed.
+                    // Stays lazy: on mobile this hero sits in a display:none
+                    // container, and lazy images there are never fetched.
+                    <Image
                       src={img.src}
                       alt={img.alt ?? ""}
+                      fill
+                      sizes="34vw"
                       loading="lazy"
-                      decoding="async"
-                      className="h-full w-full object-cover"
+                      className="object-cover"
                       draggable={false}
                     />
                   ) : null}
