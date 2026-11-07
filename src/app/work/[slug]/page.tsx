@@ -104,7 +104,7 @@ export default async function ProjectPage({
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/20" />
         <div className="container-edit relative z-10 flex w-full flex-col gap-6 pb-16 pt-40">
           {(project.category || project.year) && (
-            <p className="label-caps text-tshabu-paper/70">{joinLabel(project.category, project.year)}</p>
+            <p className="label-caps text-tshabu-paper/70!">{joinLabel(project.category, project.year)}</p>
           )}
           <h1 className="text-5xl font-bold uppercase leading-[0.95] tracking-tight text-tshabu-paper sm:text-7xl md:text-8xl">
             {project.name}

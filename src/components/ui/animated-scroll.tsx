@@ -174,7 +174,7 @@ export default function ScrollAdventure({ pages, className }: ScrollAdventurePro
                 <div className="relative flex h-full flex-col items-center justify-center p-8 text-center text-tshabu-paper">
                   {page.leftContent && (
                     <>
-                      <p className="label-caps mb-4 text-tshabu-paper/70">{page.leftContent.heading}</p>
+                      <p className="label-caps mb-4 text-tshabu-paper/70!">{page.leftContent.heading}</p>
                       <p className="max-w-sm text-lg leading-relaxed">{page.leftContent.description}</p>
                     </>
                   )}
@@ -201,7 +201,7 @@ export default function ScrollAdventure({ pages, className }: ScrollAdventurePro
                 <div className="relative flex h-full flex-col items-center justify-center p-8 text-center text-tshabu-paper">
                   {page.rightContent && (
                     <>
-                      <p className="label-caps mb-4 text-tshabu-paper/70">{page.rightContent.heading}</p>
+                      <p className="label-caps mb-4 text-tshabu-paper/70!">{page.rightContent.heading}</p>
                       <p className="max-w-sm text-lg leading-relaxed">{page.rightContent.description}</p>
                     </>
                   )}

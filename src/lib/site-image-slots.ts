@@ -19,18 +19,16 @@ export type SiteImageSlot = {
 export const SITE_IMAGE_SLOTS: SiteImageSlot[] = [
   { key: "logo", label: "Logo", group: "Branding", defaultSrc: "/images/logo.png" },
 
-  { key: "home_hero_media", label: "Mobile Hero — Foreground", group: "Homepage Hero", defaultSrc: "/images/hero/camera-artistic.jpg" },
-  { key: "home_hero_background", label: "Mobile Hero — Background", group: "Homepage Hero", defaultSrc: "/images/hero/lens-dark.jpg" },
-  { key: "home_stream_1", label: "Desktop Hero Photo 1", group: "Homepage Hero", defaultSrc: "/images/projects/yit-gala/yit-gala-1.jpg" },
-  { key: "home_stream_2", label: "Desktop Hero Photo 2", group: "Homepage Hero", defaultSrc: "/images/projects/one-year-birthday/one-year-birthday-4.jpg" },
-  { key: "home_stream_3", label: "Desktop Hero Photo 3", group: "Homepage Hero", defaultSrc: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-1.jpg" },
-  { key: "home_stream_4", label: "Desktop Hero Photo 4", group: "Homepage Hero", defaultSrc: "/images/projects/jazz-and-wine/jazz-and-wine-2.jpg" },
-  { key: "home_stream_5", label: "Desktop Hero Photo 5", group: "Homepage Hero", defaultSrc: "/images/projects/50th-birthday/50th-birthday-3.jpg" },
-  { key: "home_stream_6", label: "Desktop Hero Photo 6", group: "Homepage Hero", defaultSrc: "/images/projects/yit-gala/yit-gala-6.jpg" },
-  { key: "home_stream_7", label: "Desktop Hero Photo 7", group: "Homepage Hero", defaultSrc: "/images/projects/jazz-and-wine/jazz-and-wine-6.jpg" },
-  { key: "home_stream_8", label: "Desktop Hero Photo 8", group: "Homepage Hero", defaultSrc: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-3.jpg" },
-  { key: "home_stream_9", label: "Desktop Hero Photo 9", group: "Homepage Hero", defaultSrc: "/images/projects/one-year-birthday/one-year-birthday-1.jpg" },
-  { key: "home_stream_10", label: "Desktop Hero Photo 10", group: "Homepage Hero", defaultSrc: "/images/projects/50th-birthday/50th-birthday-1.jpg" },
+  { key: "home_stream_1", label: "Homepage Hero Photo 1", group: "Homepage Hero", defaultSrc: "/images/projects/yit-gala/yit-gala-1.jpg" },
+  { key: "home_stream_2", label: "Homepage Hero Photo 2", group: "Homepage Hero", defaultSrc: "/images/projects/one-year-birthday/one-year-birthday-4.jpg" },
+  { key: "home_stream_3", label: "Homepage Hero Photo 3", group: "Homepage Hero", defaultSrc: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-1.jpg" },
+  { key: "home_stream_4", label: "Homepage Hero Photo 4", group: "Homepage Hero", defaultSrc: "/images/projects/jazz-and-wine/jazz-and-wine-2.jpg" },
+  { key: "home_stream_5", label: "Homepage Hero Photo 5", group: "Homepage Hero", defaultSrc: "/images/projects/50th-birthday/50th-birthday-3.jpg" },
+  { key: "home_stream_6", label: "Homepage Hero Photo 6", group: "Homepage Hero", defaultSrc: "/images/projects/yit-gala/yit-gala-6.jpg" },
+  { key: "home_stream_7", label: "Homepage Hero Photo 7", group: "Homepage Hero", defaultSrc: "/images/projects/jazz-and-wine/jazz-and-wine-6.jpg" },
+  { key: "home_stream_8", label: "Homepage Hero Photo 8", group: "Homepage Hero", defaultSrc: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-3.jpg" },
+  { key: "home_stream_9", label: "Homepage Hero Photo 9", group: "Homepage Hero", defaultSrc: "/images/projects/one-year-birthday/one-year-birthday-1.jpg" },
+  { key: "home_stream_10", label: "Homepage Hero Photo 10", group: "Homepage Hero", defaultSrc: "/images/projects/50th-birthday/50th-birthday-1.jpg" },
 
   { key: "about_hero", label: "About Page Photo", group: "About Page", defaultSrc: "/images/projects/one-year-birthday/one-year-birthday-4.jpg" },
 

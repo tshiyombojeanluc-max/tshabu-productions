@@ -1,32 +1,19 @@
 import Link from "next/link";
-import { MinimalistHero } from "@/components/ui/minimalist-hero";
-import ScrollExpandMedia from "@/components/ui/scroll-expansion-hero";
+import { OrbitHero } from "@/components/site/orbit-hero";
 import { Reveal } from "@/components/site/reveal";
 import { SectionHeading } from "@/components/site/section-heading";
 import { ProjectGrid } from "@/components/site/project-grid";
 import ScrollAdventure, { type ScrollAdventurePage } from "@/components/ui/animated-scroll";
-import type { StreamImage } from "@/components/ui/image-stream-hero";
-import { joinLabel, navLinks, services, site, type Project } from "@/lib/data";
+import { joinLabel, services, site, type Project } from "@/lib/data";
 import { getPublishedProjects } from "@/lib/galleries";
 import { getSiteImageOverrides } from "@/lib/site-images";
 import { resolveSiteImage } from "@/lib/site-image-slots";
 import { buildMetadata } from "@/lib/seo";
 
-// Falls back to a curated spread of real client photos across all 5
-// projects — replaceable per-slot from Dashboard → Site Images (see
-// lib/site-image-slots.ts) — cycled through the hero's animated corridor.
-const heroStreamDefaults: (StreamImage & { key: string })[] = [
-  { key: "home_stream_1", src: "/images/projects/yit-gala/yit-gala-1.jpg", alt: "Guests at the YIT Gala dinner table" },
-  { key: "home_stream_2", src: "/images/projects/one-year-birthday/one-year-birthday-4.jpg", alt: "A toddler at her first birthday cake smash" },
-  { key: "home_stream_3", src: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-1.jpg", alt: "A speaker at the Myles Munroe Foundation event" },
-  { key: "home_stream_4", src: "/images/projects/jazz-and-wine/jazz-and-wine-2.jpg", alt: "Guests at the Jazz & Wine event" },
-  { key: "home_stream_5", src: "/images/projects/50th-birthday/50th-birthday-3.jpg", alt: "Guests at a 50th birthday celebration" },
-  { key: "home_stream_6", src: "/images/projects/yit-gala/yit-gala-6.jpg", alt: "A guest laughing at the YIT Gala" },
-  { key: "home_stream_7", src: "/images/projects/jazz-and-wine/jazz-and-wine-6.jpg", alt: "A musician performing at Jazz & Wine" },
-  { key: "home_stream_8", src: "/images/projects/myles-munroe-foundation/myles-munroe-foundation-3.jpg", alt: "A speaker at the Myles Munroe Foundation event" },
-  { key: "home_stream_9", src: "/images/projects/one-year-birthday/one-year-birthday-1.jpg", alt: "A first birthday photoshoot" },
-  { key: "home_stream_10", src: "/images/projects/50th-birthday/50th-birthday-1.jpg", alt: "A 50th birthday celebration" },
-];
+// The Orbit hero's ring photos — the dashboard's "Desktop Hero Photo 1–10"
+// slots (Dashboard → Site Images), each falling back to a shipped photo of
+// real client work (see lib/site-image-slots.ts).
+const heroPhotoSlots = Array.from({ length: 10 }, (_, i) => `home_stream_${i + 1}`);
 
 // No Request-time APIs (cookies/headers) run in this tree — getFeaturedProjects
 // and getSiteImageOverrides both go through the cookie-free public Supabase
@@ -37,7 +24,7 @@ export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: "Tshabu Productions — Photography & Videography in Cape Town",
   description:
-    "Tshabu Productions creates timeless photography and cinematic videography for events, brands and businesses in Cape Town. We don't just take photos or film videos — we tell your story.",
+    "Event photography and film in Cape Town. Tshabu Productions covers conferences, galas and celebrations — photographed and filmed by one team, with same-day previews.",
   path: "/",
 });
 
@@ -76,67 +63,18 @@ export default async function HomePage() {
   const showreelSlugs = new Set(featuredProjects.slice(0, 4).map((p) => p.slug));
   const moreProjects = allProjects.filter((p) => !showreelSlugs.has(p.slug)).slice(0, 4);
   const portfolioGridProjects = moreProjects.length > 0 ? moreProjects : featuredProjects.slice(0, 4);
-  const heroStreamImages: StreamImage[] = heroStreamDefaults.map(({ key, alt }) => ({
-    src: resolveSiteImage(imageOverrides, key),
-    alt,
-  }));
-  const mobileHeroMedia = resolveSiteImage(imageOverrides, "home_hero_media");
-  const mobileHeroBackground = resolveSiteImage(imageOverrides, "home_hero_background");
+  const heroPhotos = heroPhotoSlots.map((key) => ({ src: resolveSiteImage(imageOverrides, key) }));
 
   return (
     <>
-      <h1 className="sr-only">
-        Photography &amp; Videography Production Company in Cape Town
-      </h1>
-
-      {/* Desktop hero: unchanged — the animated image-corridor hero. */}
-      <div className="hidden md:block">
-        <MinimalistHero
-          hideHeader
-          logoText={site.shortName}
-          navLinks={navLinks}
-          mainText="Photography · Videography · Storytelling. Timeless photo and cinematic video for events, brands and businesses in Cape Town."
-          ctaText="Book Your Session →"
-          ctaLink="/contact"
-          watermarkText={["Tshabu", "Productions"]}
-          socialLinks={[]}
-          locationText={site.location}
-          className="pt-20"
-          streamImages={heroStreamImages}
-        />
-      </div>
-
-      {/* Mobile hero: scroll-expand media hero, replacing the corridor hero
-          on small viewports only. Every piece of copy the desktop hero
-          carries (wordmark, tagline, CTA, location) still appears here —
-          just distributed across the component's own immediate text slots
-          and its scroll-revealed content area.
-          Media: black-and-white artistic camera shots (self-hosted, not
-          hot-linked to Unsplash — see git history for why: a real user's
-          ad/privacy blocker silently broke images.unsplash.com hotlinks
-          on this site before). Brand/mood imagery, not portfolio work. */}
-      <div className="md:hidden">
-        <ScrollExpandMedia
-          mediaType="image"
-          mediaSrc={mobileHeroMedia}
-          bgImageSrc={mobileHeroBackground}
-          title="Tshabu Productions"
-          date={site.location}
-          scrollToExpand="Photography · Videography · Storytelling"
-        >
-          <div className="mx-auto flex max-w-sm flex-col items-center gap-6 text-center">
-            <p className="text-sm leading-relaxed text-foreground/80">
-              {"Photography · Videography · Storytelling. Timeless photo and cinematic video for events, brands and businesses in Cape Town."}
-            </p>
-            <Link
-              href="/contact"
-              className="block w-fit bg-tshabu-black px-8 py-4 text-sm uppercase tracking-[0.2em] text-tshabu-paper transition-colors hover:bg-tshabu-charcoal"
-            >
-              Book Your Session →
-            </Link>
-          </div>
-        </ScrollExpandMedia>
-      </div>
+      <OrbitHero
+        photos={heroPhotos}
+        eyebrow={site.name}
+        headline={["Event photography", "& film in Cape Town"]}
+        body="Conferences, galas and celebrations, photographed and filmed by one team, with same-day previews."
+        ctaText="Get a Quote →"
+        ctaHref="/contact"
+      />
 
       <section className="container-edit py-16 md:py-40">
         <Reveal>
@@ -156,7 +94,7 @@ export default async function HomePage() {
             href="/contact"
             className="inline-block bg-tshabu-black px-8 py-4 text-sm uppercase tracking-[0.2em] text-tshabu-paper transition-colors hover:bg-tshabu-charcoal"
           >
-            Book Your Session →
+            Get a Quote →
           </Link>
         </Reveal>
       </section>
@@ -194,15 +132,20 @@ export default async function HomePage() {
           <SectionHeading dark label="What We Do" title="Services" className="mb-16" />
           <ul>
             {services.map((service, i) => (
-              <Reveal key={service.id} delay={i * 0.05}>
-                <li className="flex flex-col gap-2 border-t border-tshabu-paper/15 py-8 last:border-b sm:flex-row sm:items-center sm:justify-between">
+              // <li> must be the <ul>'s direct child (Reveal renders a
+              // <div>), so the reveal animation now sits inside the item.
+              <li key={service.id} className="border-t border-tshabu-paper/15 last:border-b">
+                <Reveal
+                  delay={i * 0.05}
+                  className="flex flex-col gap-2 py-8 sm:flex-row sm:items-center sm:justify-between"
+                >
                   <div className="flex items-baseline gap-6">
-                    <span className="label-caps text-tshabu-paper/60">{service.index}</span>
+                    <span className="label-caps text-tshabu-paper/60!">{service.index}</span>
                     <h3 className="text-2xl font-medium sm:text-3xl">{service.title}</h3>
                   </div>
                   <p className="text-tshabu-paper/60 sm:max-w-sm sm:text-right">{service.summary}</p>
-                </li>
-              </Reveal>
+                </Reveal>
+              </li>
             ))}
           </ul>
           <Reveal delay={0.2} className="mt-12">

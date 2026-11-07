@@ -163,7 +163,7 @@ export default function ServicesPage() {
       <section className="bg-tshabu-black py-24 text-tshabu-paper md:py-32">
         <div className="container-edit flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
           <Reveal className="max-w-2xl">
-            <p className="label-caps mb-4 text-tshabu-paper/70">Planning an event?</p>
+            <p className="label-caps mb-4 text-tshabu-paper/70!">Planning an event?</p>
             <h2 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
               Tell us the date and venue — we&rsquo;ll come back with a quote.
             </h2>
@@ -186,7 +186,7 @@ export default function ServicesPage() {
           </Reveal>
         </div>
         <div className="container-edit mt-12">
-          <Link href="/work" className="label-caps text-tshabu-paper/70 underline underline-offset-4 hover:text-tshabu-paper">
+          <Link href="/work" className="label-caps text-tshabu-paper/70! underline underline-offset-4 hover:text-tshabu-paper!">
             See recent event work →
           </Link>
         </div>
