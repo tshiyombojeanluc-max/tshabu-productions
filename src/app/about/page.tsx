@@ -15,7 +15,7 @@ import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: "About",
+  title: "About Our Cape Town Photo & Film Studio",
   description:
     "Tshabu Productions is a Cape Town photography and videography studio built on storytelling, visual quality and disciplined craft.",
   path: "/about",

@@ -30,6 +30,9 @@ export const socialLinks = [
   { label: "Facebook", href: "https://www.facebook.com/tshabu.elie" },
   { label: "Instagram", href: "https://www.instagram.com/tshabuproductions" },
   { label: "TikTok", href: "https://www.tiktok.com/@tshabu.production" },
+  // Google Business Profile share link. Also feeds the Organization
+  // schema's sameAs (layout.tsx), tying the site to the Maps listing.
+  { label: "Google", href: "https://share.google/PNZ1aXwEFVxe2ODMl" },
 ];
 
 // Gallery/photo content used to live here as a hardcoded array. It's now

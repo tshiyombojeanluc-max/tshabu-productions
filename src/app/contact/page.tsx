@@ -5,9 +5,9 @@ import { site, socialLinks, whatsappUrl } from "@/lib/data";
 import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Contact",
+  title: "Get an Event Photography Quote",
   description:
-    "Get in touch with Tshabu Productions to book photography, videography or event coverage in Cape Town.",
+    "Get a quote for event photography or videography in Cape Town. Send your date and venue, or WhatsApp Tshabu Productions directly.",
   path: "/contact",
 });
 

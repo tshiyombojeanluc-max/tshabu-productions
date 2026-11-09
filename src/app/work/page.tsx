@@ -11,9 +11,9 @@ import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: "Work",
+  title: "Event Photography Portfolio, Cape Town",
   description:
-    "Selected photography, videography and event coverage from Tshabu Productions in Cape Town — real events, real clients.",
+    "Event photography and videography portfolio from Tshabu Productions: conferences, galas, matric balls and celebrations across Cape Town.",
   path: "/work",
 });
 

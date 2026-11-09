@@ -12,9 +12,9 @@ import { services, site, whatsappUrl } from "@/lib/data";
 import { buildMetadata, breadcrumbJsonLd, absoluteUrl } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Services",
+  title: "Photography & Video Services, Cape Town",
   description:
-    "Photography, videography, event coverage and post-production — the services offered by Tshabu Productions in Cape Town.",
+    "Event photography, videography, conference coverage, headshots and post-production in Cape Town. One team for photo and film, with same-day previews.",
   path: "/services",
 });
 

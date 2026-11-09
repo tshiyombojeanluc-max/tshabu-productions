@@ -24,7 +24,7 @@ export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: "Tshabu Productions — Photography & Videography in Cape Town",
   description:
-    "Event photography and film in Cape Town. Tshabu Productions covers conferences, galas and celebrations — photographed and filmed by one team, with same-day previews.",
+    "Event photography and film in Cape Town. Conferences, galas and celebrations, photographed and filmed by one team, with same-day previews.",
   path: "/",
 });
 
